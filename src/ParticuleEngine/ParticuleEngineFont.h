@@ -34,8 +34,8 @@ typedef struct PC_Font
     int w, h;
     int row, col;
     int size;
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    font_t* font;
     #endif
 } PC_Font;
 
@@ -43,6 +43,8 @@ extern PC_Font* MainFont;
 
 #if defined(PSP_MODE) || defined(NDS_MODE)
 PC_Font* PC_LoadFont(const char* path, int size, int w, int h,int row, int col);
+#elif defined(CG_MODE) || defined(FX_MODE)
+PC_Font* PC_LoadFont(const char* path);
 #else
 PC_Font* PC_LoadFont(const char* path, int size);
 #endif

@@ -1,4 +1,5 @@
 #include "ParticuleEngineFont.h"
+#include "Resources.h"
 #include <math.h>
 #include <string.h>
 
@@ -6,6 +7,8 @@ PC_Font* MainFont = NULL;
 
 #if defined(PSP_MODE) || defined(NDS_MODE)
 PC_Font* PC_LoadFont(const char* path,int size, int w, int h,int row, int col)
+#elif defined(CG_MODE) || defined(FX_MODE)
+PC_Font* PC_LoadFont(const char* path)
 #else
 PC_Font* PC_LoadFont(const char* path, int size)
 #endif
@@ -31,9 +34,8 @@ PC_Font* PC_LoadFont(const char* path, int size)
     font->col = col;
     font->size = size;
     return font;
-    #elif defined(NDS_MODE)
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    return (PC_Font*)GetResource((unsigned char*)path);
     #endif
 }
 
@@ -44,9 +46,9 @@ void SetMainFont(PC_Font* font)
 
 void PC_DrawText(const unsigned char *text, int x, int y, PC_Color color, PC_Font* font)
 {
-    if (font == NULL)
-        return;
     #if defined(WIN_MODE)
+     if (font == NULL)
+        return;
     SDL_Color sdlColor = {color.r, color.g, color.b, color.a};
     SDL_Surface* textSurface = TTF_RenderText_Blended(font->font, text, sdlColor);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
@@ -55,6 +57,8 @@ void PC_DrawText(const unsigned char *text, int x, int y, PC_Color color, PC_Fon
     SDL_DestroyTexture(textTexture);
     SDL_FreeSurface(textSurface);
     #elif defined(PSP_MODE) || defined(NDS_MODE)
+     if (font == NULL)
+        return;
     int t = fmax(font->h, font->w);
     int scale = font->size / t;
     int len = strlen(text);
@@ -66,7 +70,9 @@ void PC_DrawText(const unsigned char *text, int x, int y, PC_Color color, PC_Fon
         int v = row * font->h;
         PC_DrawSubTextureSizeColored(font->texture, x + i * font->w * scale, y, u, v, font->w, font->h, font->w * scale, font->h * scale, color);
     }
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    if (font != NULL)
+        dfont(font->font);
+    dtext(x, y, color.Hexa, (const char*)text);
     #endif
 }

@@ -25,8 +25,17 @@ struct Vertex __attribute__((aligned(16))) line[2] = {
 #include <dirent.h>
 
 int PaletteID;
-#elif defined(CG_MODE)
-#elif defined(FX_MODE)
+#elif defined(CG_MODE) || defined(FX_MODE)
+#include <gint/display.h>
+#include <gint/keyboard.h>
+#include <gint/display.h>
+#include <gint/rtc.h>
+#include <gint/keyboard.h>
+#include <gint/timer.h>
+#include <gint/clock.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #endif
 
 PC_Color PC_ColorCreate(short r, short g, short b, short a)
@@ -44,7 +53,11 @@ PC_Color PC_ColorCreate(short r, short g, short b, short a)
     #elif defined(CG_MODE)
     color.Hexa = rgb(r, g, b);
     #elif defined(FX_MODE)
-    color.Hexa = rgb(r, g, b);
+    int gray = (r + g + b) / 3;
+    if (gray > 255/2)
+        color.Hexa = C_WHITE;
+    else
+        color.Hexa = C_BLACK;
     #endif
     return color;
 }
@@ -69,8 +82,8 @@ void PC_DrawPoint(int x, int y, PC_Color color)
     sceGuDrawArray(GU_POINTS, GU_COLOR_8888|GU_VERTEX_32BITF|GU_TRANSFORM_2D, 2, 0, vertices);
     #elif defined(NDS_MODE)
     glBoxFilled(x, y, x + 1, y + 1, color._rgb15);
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    dpixel(x, y, color.Hexa);
     #endif
 }
 
@@ -94,8 +107,8 @@ void PC_DrawLine(int x1, int y1, int x2, int y2, PC_Color color)
     sceGuDrawArray(GU_LINES, GU_COLOR_8888|GU_VERTEX_32BITF|GU_TRANSFORM_2D, 2, 0, vertices);
     #elif defined(NDS_MODE)
     glLine(x1, y1, x2, y2, color._rgb15);
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    dline(x1, y1, x2, y2, color.Hexa);
     #endif
 }
 
@@ -135,8 +148,11 @@ void PC_DrawRect(int x, int y, int w, int h, PC_Color color)
     glLine(x + w, y, x + w, y + h, color._rgb15);
     glLine(x, y + h, x, y, color._rgb15);
     glLine(x, y + h, x + w, y + h, color._rgb15);
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    dline(x, y, x + w, y, color.Hexa);
+    dline(x + w, y, x + w, y + h, color.Hexa);
+    dline(x, y + h, x, y, color.Hexa);
+    dline(x, y + h, x + w, y + h, color.Hexa);
     #endif
 }
 
@@ -161,7 +177,7 @@ void PC_DrawFillRect(int x, int y, int w, int h, PC_Color color)
     sceGuDrawArray(GU_SPRITES, GU_COLOR_8888|GU_VERTEX_32BITF|GU_TRANSFORM_2D, 2, 0, vertices);
     #elif defined(NDS_MODE)
     glBoxFilled(x, y, x + w, y + h, color._rgb15);
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    drect(x, y, x + w, y + h, color.Hexa);
     #endif
 }

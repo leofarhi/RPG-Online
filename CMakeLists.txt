@@ -24,6 +24,8 @@ set(SOURCES
     src/ParticuleEngine/ParticuleEngineTexture.h
     src/ParticuleEngine/Resources.c
     src/ParticuleEngine/Resources.h
+    Libs/List/List.c
+    Libs/List/List.h
 #/*</SRC>*/
   # ...
 )

@@ -19,7 +19,7 @@ Make.geometry("400x400")
 DropDownMenu = ttk.Combobox(Make, state="readonly")
 #pack on top and fill x
 DropDownMenu.pack(side=TOP, fill=X)
-DropDownMenu["values"] = ("Windows","Linux","DS", "3DS", "WII", "Switch", "PSP", "Casio Graph90", "Casio Graph35+")
+DropDownMenu["values"] = ("Windows","Linux","DS", "3DS", "WII", "Switch", "PSP", "Casio CG", "Casio FX")
 DropDownMenu.current(0)
 
 
@@ -216,6 +216,8 @@ class CasioDistribution(Distribution):
                     srcList.append(os.path.join(root, file))
                     #change \\ to /
                     srcList[-1] = srcList[-1].replace("\\", "/")
+        srcList.append("Libs/List/List.c")
+        srcList.append("Libs/List/List.h")
         print(srcList)
         textSrc = "\n"
         for i in range(0, len(srcList)):
@@ -232,14 +234,22 @@ class CasioDistribution(Distribution):
         cmdString = self.ReplaceVars(self.MakeCmdString.get())
         os.system(cmdString)
 
-
-
     def Clean(self):
         os.system("make clean")
 
+class PspDistribution(Distribution):
+    def __init__(self, MainFrame, name):
+        super().__init__(MainFrame, name)
+
+    def Make(self):
+        textProgName = '\n#define PROJECT_NAME "' + self.AppNameString.get() + '"\n'
+        self.ReplaceVarsInFile("src/ParticuleEngine/Resources.c", "PROJECT_NAME", textProgName)
+        super().Make()
+
 DictSpecialDistributions = {
-    "Casio Graph90": CasioDistribution,
-    "Casio Graph35+": CasioDistribution
+    "Casio CG": CasioDistribution,
+    "Casio FX": CasioDistribution,
+    "PSP": PspDistribution
 }
 
 #make Distribution objects

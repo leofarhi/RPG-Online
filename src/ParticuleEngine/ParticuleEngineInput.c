@@ -67,9 +67,7 @@ void UpdateInputs()
     sceCtrlReadBufferPositive(&padData,1);
     #elif defined(NDS_MODE)
     scanKeys();
-    #elif defined(CG_MODE)
-    clearevents();
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
     clearevents();
     #endif
 }
@@ -92,9 +90,7 @@ int IsKeyPressed(int key)
     return current && last; // Currently pressed, and pressed last time
     #elif defined(NDS_MODE)
     return keysHeld() & ((KEYPAD_BITS)key);
-    #elif defined(CG_MODE)
-    return keydown(key);
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
     return keydown(key);
     #endif
 
@@ -119,10 +115,8 @@ int IsKeyDown(int key)
     return current && !last; // Currently pressed, not pressed last time
     #elif defined(NDS_MODE)
     return keysDown() & ((KEYPAD_BITS)key);
-    #elif defined(CG_MODE)
-    return keydown(key); //a changer
-    #elif defined(FX_MODE)
-    return keydown(key); //a changer
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    return keydown(key);
     #endif
 
     return 0;
@@ -158,9 +152,7 @@ int IsKeyUp(int key)
     return !current && last; // Currently not pressed, and pressed last time
     #elif defined(NDS_MODE)
     return keysUp() & ((KEYPAD_BITS)key);
-    #elif defined(CG_MODE)
-    //TODO: Implement
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
     //TODO: Implement
     #endif
 
@@ -174,9 +166,7 @@ int IsMouseButtonPressed(int button)
     #elif defined(PSP_MODE)
     
     #elif defined(NDS_MODE)
-    #elif defined(CG_MODE)
-    //TODO: Implement
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
     //TODO: Implement
     #endif
 
@@ -197,9 +187,7 @@ int IsMouseButtonDown(int button)
     }
     #elif defined(PSP_MODE)
     #elif defined(NDS_MODE)
-    #elif defined(CG_MODE)
-    //TODO: Implement
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
     //TODO: Implement
     #endif
 
@@ -220,9 +208,7 @@ int IsMouseButtonUp(int button)
     }
     #elif defined(PSP_MODE)
     #elif defined(NDS_MODE)
-    #elif defined(CG_MODE)
-    //TODO: Implement
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
     //TODO: Implement
     #endif
 

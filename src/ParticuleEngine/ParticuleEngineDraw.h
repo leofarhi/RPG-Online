@@ -25,11 +25,18 @@ struct Vertex
 
 extern int PaletteID;			// the all-white pal
 
-#elif defined(CG_MODE)
-#elif defined(FX_MODE)
-#endif
+#elif defined(CG_MODE) || defined(FX_MODE)
+#include <gint/display.h>
+#include <gint/keyboard.h>
+#include <gint/display.h>
+#include <gint/rtc.h>
+#include <gint/keyboard.h>
+#include <gint/timer.h>
+#include <gint/clock.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
-#if defined(CG_MODE) || defined(FX_MODE)
 #define rgb(r, g, b) ((r & 0xf8) << 8) | ((g & 0xfc) << 3) | ((b & 0xf8) >> 3);
 #endif
 
@@ -45,9 +52,7 @@ typedef struct PC_Color
     u32 color;
     #elif defined(NDS_MODE)
     int _rgb15;
-    #elif defined(CG_MODE)
-    int Hexa;
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
     int Hexa;
     #endif
 } PC_Color;

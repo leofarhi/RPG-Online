@@ -25,16 +25,12 @@ struct VertexTexture
 	float x, y, z;
 };
 #elif defined(NDS_MODE)
-#include <List.h>
-extern List* AllTextures;
-
-void AddTexture(unsigned char* path, const unsigned int* Bitmap, const unsigned short* Pal, int width, int height);
-
 #include "Tilesets_Outside_A1.h"
 #include "Font.h"
-#elif defined(CG_MODE)
-#elif defined(FX_MODE)
+#elif defined(CG_MODE) || defined(FX_MODE)
 #endif
+
+#include <List.h>
 
 typedef struct PC_Texture
 {
@@ -52,7 +48,6 @@ typedef struct PC_Texture
     const unsigned int* Bitmap;
     const unsigned short* Pal;
     int TextureID;
-    unsigned char* path;
     #elif defined(CG_MODE)
     bopti_image_t* texture;
     #elif defined(FX_MODE)

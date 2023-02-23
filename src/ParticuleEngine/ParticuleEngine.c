@@ -4,10 +4,12 @@
 #include "ParticuleEngineTexture.h"
 #include "ParticuleEngineInput.h"
 #include "ParticuleEngineFont.h"
+#include "Resources.h"
 
 #if defined(WIN_MODE)
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -25,6 +27,22 @@ void errx(int exitcode, const char *format, const char* error)
     exit(exitcode);
 }
 
+void ResetDirectory()
+{
+    // Obtenez le chemin absolu du programme
+    char *path = SDL_GetBasePath();
+    if (path == NULL)
+        errx(EXIT_FAILURE, "error SDL_GetBasePath %s", SDL_GetError());
+
+    // Changez le répertoire de travail
+    if (chdir(path) != 0)
+        errx(EXIT_FAILURE, "error chdir %s", SDL_GetError());
+
+    // Libérez la mémoire
+    //printf("path: %s\n", path);
+    SDL_free(path);
+}
+
 #elif defined(PSP_MODE)
 #include "Libs/PSP/common/callbacks.h"
 #include "Libs/PSP/common/common-sce.h"
@@ -35,9 +53,6 @@ void errx(int exitcode, const char *format, const char* error)
 #include <pspdisplay.h>
 #include <pspgu.h>
 #include <pspgum.h>
-
-PSP_MODULE_INFO("Engine", 0, 1, 1);
-PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 
 #elif defined(NDS_MODE)
 int slcScreen = 0;
@@ -56,6 +71,8 @@ void PC_Init()
                 SDL_WINDOW_SHOWN);// | SDL_WINDOW_RESIZABLE);
         if (window == NULL)
             errx(EXIT_FAILURE, "error window %s", SDL_GetError());
+
+        ResetDirectory();
 
         // Creates a renderer.
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -136,10 +153,12 @@ void PC_Init()
     #elif defined(CG_MODE)
     #elif defined(FX_MODE)
     #endif
+    LoadResources();
 }
 
 void PC_Quit()
 {
+    UnloadResources();
     #if defined(WIN_MODE)
         // Quits the font library.
         TTF_Quit();
@@ -187,8 +206,8 @@ void ClearScreen()
     #elif defined(NDS_MODE)
     	glBegin2D();
 	    glBoxFilled(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, PC_BLACK._rgb15);
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    dclear(C_BLACK);
     #endif
 }
 
@@ -203,8 +222,8 @@ void UpdateScreen()
         glFlush(0);
         //glFlush(1);
         swiWaitForVBlank();
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    dupdate();
     #endif
 }
 

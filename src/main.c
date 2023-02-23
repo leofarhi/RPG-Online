@@ -3,6 +3,7 @@
 #include "ParticuleEngine/ParticuleEngineTexture.h"
 #include "ParticuleEngine/ParticuleEngineInput.h"
 #include "ParticuleEngine/ParticuleEngineFont.h"
+#include "ParticuleEngine/Resources.h"
 
 int main(){//int argc, char *argv[]) {
     PC_Init();
@@ -56,6 +57,14 @@ int main(){//int argc, char *argv[]) {
             i++;
         if (IsKeyPressed(KEY_LEFT))
             i--;
+        #endif
+        #if defined(CG_MODE) || defined(FX_MODE)
+        if (IsKeyPressed(KEY_RIGHT))
+            i++;
+        if (IsKeyPressed(KEY_LEFT))
+            i--;
+        if (IsKeyPressed(KEY_MENU))
+            break;
         #endif
         //PC_DrawTexture(texture, 0, 0);
         PC_DrawSubTexture(texture, 50, 50, 0, 0, 50, 50);
