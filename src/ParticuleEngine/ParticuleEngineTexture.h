@@ -1,6 +1,7 @@
 #ifndef PARTICULE_ENGINE_TEXTURE_H
 #define PARTICULE_ENGINE_TEXTURE_H
 #include "ParticuleEngine.h"
+#include "ParticuleEngineDraw.h"
 
 #if defined(WIN_MODE)
 #include <SDL2/SDL.h>
@@ -23,7 +24,14 @@ struct VertexTexture
 	unsigned int color;
 	float x, y, z;
 };
-#elif defined(NSD_MODE)
+#elif defined(NDS_MODE)
+#include <List.h>
+extern List* AllTextures;
+
+void AddTexture(unsigned char* path, const unsigned int* Bitmap, const unsigned short* Pal, int width, int height);
+
+#include "Tilesets_Outside_A1.h"
+#include "Font.h"
 #elif defined(CG_MODE)
 #elif defined(FX_MODE)
 #endif
@@ -37,7 +45,14 @@ typedef struct PC_Texture
     #elif defined(PSP_MODE)
     Texture* texture;
     int vram;
-    #elif defined(NSD_MODE)
+    #elif defined(NDS_MODE)
+    int width;
+    int height;
+    glImage* imageData;
+    const unsigned int* Bitmap;
+    const unsigned short* Pal;
+    int TextureID;
+    unsigned char* path;
     #elif defined(CG_MODE)
     bopti_image_t* texture;
     #elif defined(FX_MODE)
@@ -73,5 +88,22 @@ void PC_DrawSubTexture(PC_Texture* texture, int x, int y, int sx, int sy, int sw
 //x and y are the coordinates of the top left corner of the texture
 //sx and sy are the coordinates of the top left corner of the part of the texture to draw
 //sw and sh are the width and height of the part of the texture to draw
+
+void PC_DrawSubTextureSize(PC_Texture* texture, int x, int y, int sx, int sy, int sw, int sh, int w, int h);
+//draws a part of a texture on the screen
+//texture is a pointer to a PC_Texture struct
+//x and y are the coordinates of the top left corner of the texture
+//sx and sy are the coordinates of the top left corner of the part of the texture to draw
+//sw and sh are the width and height of the part of the texture to draw
+//w and h are the width and height of the texture to draw
+
+void PC_DrawSubTextureSizeColored(PC_Texture* texture, int x, int y, int sx, int sy, int sw, int sh, int w, int h, PC_Color color);
+//draws a part of a texture on the screen
+//texture is a pointer to a PC_Texture struct
+//x and y are the coordinates of the top left corner of the texture
+//sx and sy are the coordinates of the top left corner of the part of the texture to draw
+//sw and sh are the width and height of the part of the texture to draw
+//w and h are the width and height of the texture to draw
+//color is the color of the texture
 
 #endif

@@ -1,0 +1,23 @@
+#PSP COMPILATION
+OBJS = $(OBJ) Libs/PSP/common/callbacks.o Libs/PSP/common/common-sce.o
+
+INCDIR = $(ListDir)
+LIBS= $(LDLIBS) -lpspgum -lpspgu -lm -lpspaudio -lpspmp3 -lpspaudiocodec -lpspaudiolib -lpspsdk -lpsprtc
+CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
+ASFLAGS = $(CFLAGS)
+
+LIBDIR =
+LDFLAGS =
+
+EXTRA_TARGETS = EBOOT.PBP
+PSP_EBOOT_TITLE = $(TITLE)
+
+#add -DPSP_MODE
+CFLAGS += -DPSP_MODE
+
+PSPSDK=$(shell psp-config --pspsdk-path)
+include $(PSPSDK)/lib/build.mak
+#move EBOOT.PBP to bin folder
+psp_mode: all
+	mv $(EXTRA_TARGETS) $(OUTPUT)/$(EXTRA_TARGETS)
+	mv PARAM.SFO $(OUTPUT)/PARAM.SFO

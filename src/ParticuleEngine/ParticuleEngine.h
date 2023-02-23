@@ -1,6 +1,7 @@
 #ifndef PARTICULE_ENGINE_H
 #define PARTICULE_ENGINE_H
 #include <List.h>
+#include <stddef.h>
 
 #if defined(FX9860G)
 #define FX_MODE
@@ -48,7 +49,7 @@ static unsigned int __attribute__((aligned(16))) list[262144];
 #define SCREEN_WIDTH PSP_SCR_WIDTH // 480
 #define SCREEN_HEIGHT PSP_SCR_HEIGHT // 272
 
-#elif defined(NSD_MODE)
+#elif defined(NDS_MODE)
 #include <nds.h>
 #include <stdio.h>
 #include <string.h>
@@ -58,6 +59,14 @@ static unsigned int __attribute__((aligned(16))) list[262144];
 #include <nds/input.h>
 #include <filesystem.h>
 #include <dirent.h>
+extern int slcScreen;
+#elif defined(N3DS_MODE)
+#include <citro2d.h>
+#include <assert.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #elif defined(CG_MODE)
 #include <gint/display.h>
 #include <gint/keyboard.h>
@@ -86,7 +95,7 @@ static unsigned int __attribute__((aligned(16))) list[262144];
 #endif
 
 //if not c++ compiler
-#ifndef __cplusplus
+#if !defined(__cplusplus) && !defined(bool)
 typedef int bool;
 #define true 1
 #define false 0
@@ -103,5 +112,7 @@ void ClearScreen();
 
 void UpdateScreen();
 //Updates the screen
+
+void SelectScreen(int screen);
 
 #endif

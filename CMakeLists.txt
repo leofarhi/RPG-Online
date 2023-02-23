@@ -10,18 +10,21 @@ include(Fxconv)
 find_package(Gint 2.1 REQUIRED)
 
 set(SOURCES
-  ModeraWorldRPG/Sources/main.cpp
-  ModeraWorldRPG/Sources/List.hpp
-  ModeraWorldRPG/Sources/ParticuleBase.cpp
-  ModeraWorldRPG/Sources/ParticuleBase.hpp
-  ModeraWorldRPG/Sources/Ressources.cpp
-  ModeraWorldRPG/Sources/Ressources.hpp
-  ModeraWorldRPG/Sources/Tilesets.cpp
-  ModeraWorldRPG/Sources/Tilesets.hpp
-  ModeraWorldRPG/Sources/Map.cpp
-  ModeraWorldRPG/Sources/Map.hpp
-  ModeraWorldRPG/Sources/GameManager.cpp
-  ModeraWorldRPG/Sources/GameManager.hpp
+  #/*<SRC>*/
+    src/main.c
+    src/ParticuleEngine/ParticuleEngine.c
+    src/ParticuleEngine/ParticuleEngine.h
+    src/ParticuleEngine/ParticuleEngineDraw.c
+    src/ParticuleEngine/ParticuleEngineDraw.h
+    src/ParticuleEngine/ParticuleEngineFont.c
+    src/ParticuleEngine/ParticuleEngineFont.h
+    src/ParticuleEngine/ParticuleEngineInput.c
+    src/ParticuleEngine/ParticuleEngineInput.h
+    src/ParticuleEngine/ParticuleEngineTexture.c
+    src/ParticuleEngine/ParticuleEngineTexture.h
+    src/ParticuleEngine/Resources.c
+    src/ParticuleEngine/Resources.h
+#/*</SRC>*/
   # ...
 )
 # Shared assets, fx-9860G-only assets and fx-CG-50-only assets
@@ -29,37 +32,19 @@ set(ASSETS
   # ...
 )
 set(ASSETS_fx
-  assets-fx/font.png
-  # ...
+  #/*<IMG_FX>*/
+
+#/*</IMG_FX>*/
 )
 set(ASSETS_cg
-  #/*<IMG_CASIO>*/
-assets-cg/Tilesets/Dungeon_A1.png
-assets-cg/Tilesets/Dungeon_A2.png
-assets-cg/Tilesets/Dungeon_A4.png
-assets-cg/Tilesets/Dungeon_A5.png
-assets-cg/Tilesets/Dungeon_B.png
-assets-cg/Tilesets/Dungeon_C.png
-assets-cg/Tilesets/Inside_A1.png
-assets-cg/Tilesets/Inside_A2.png
-assets-cg/Tilesets/Inside_A4.png
-assets-cg/Tilesets/Inside_A5.png
-assets-cg/Tilesets/Inside_B.png
-assets-cg/Tilesets/Inside_C.png
-assets-cg/Tilesets/Outside_A1.png
-assets-cg/Tilesets/Outside_A2.png
-assets-cg/Tilesets/Outside_A3.png
-assets-cg/Tilesets/Outside_A4.png
-assets-cg/Tilesets/Outside_A5.png
-assets-cg/Tilesets/Outside_B.png
-assets-cg/Tilesets/Outside_C.png
-assets-cg/Tilesets/World_A1.png
-assets-cg/Tilesets/World_A2.png
-assets-cg/Tilesets/World_B.png
-assets-cg/Tilesets/World_C.png
-#/*</IMG_CASIO>*/
+  #/*<IMG_CG>*/
+
+#/*</IMG_CG>*/
   # ...
 )
+
+include_directories(Libs/List)
+link_directories(Libs/List)
 
 fxconv_declare_assets(${ASSETS} ${ASSETS_fx} ${ASSETS_cg} WITH_METADATA)
 
@@ -67,10 +52,18 @@ add_executable(myaddin ${SOURCES} ${ASSETS} ${ASSETS_${FXSDK_PLATFORM}})
 target_compile_options(myaddin PRIVATE -Wall -Wextra -Os)
 target_link_libraries(myaddin Gint::Gint "${CMAKE_CURRENT_SOURCE_DIR}/libsupc++.a")
 
+#/*<NAME_APP_FIELD>*/
+set(NAME_APP "Engine")
+#/*</NAME_APP_FIELD>*/
+
+#/*<DIR_OUT_FIELD>*/
+set(DIR_OUT "bin")
+#/*</DIR_OUT_FIELD>*/
+
 if("${FXSDK_PLATFORM_LONG}" STREQUAL fx9860G)
-  generate_g1a(TARGET myaddin OUTPUT "ModeraW.g1a"
-    NAME "ModeraWorld" ICON assets-fx/icon.png)
+  generate_g1a(TARGET myaddin OUTPUT "${DIR_OUT}/${NAME_APP}.g1a"
+    NAME "${NAME_APP}" ICON assets/assets-fx/icon.png)
 elseif("${FXSDK_PLATFORM_LONG}" STREQUAL fxCG50)
-  generate_g3a(TARGET myaddin OUTPUT "ModeraW.g3a"
-    NAME "ModeraWorld" ICONS assets-cg/icon-uns.png assets-cg/icon-sel.png)
+  generate_g3a(TARGET myaddin OUTPUT "${DIR_OUT}/${NAME_APP}.g3a"
+    NAME "${NAME_APP}" ICONS assets/assets-cg/icon-uns.png assets/assets-cg/icon-sel.png)
 endif()

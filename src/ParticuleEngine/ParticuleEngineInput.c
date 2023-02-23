@@ -21,7 +21,7 @@ float InputAnalogY() {
 
     return v;
 }
-#elif defined(NSD_MODE)
+#elif defined(NDS_MODE)
 #elif defined(CG_MODE)
 #elif defined(FX_MODE)
 #endif
@@ -65,7 +65,8 @@ void UpdateInputs()
     #elif defined(PSP_MODE)
     oldData = padData;
     sceCtrlReadBufferPositive(&padData,1);
-    #elif defined(NSD_MODE)
+    #elif defined(NDS_MODE)
+    scanKeys();
     #elif defined(CG_MODE)
     clearevents();
     #elif defined(FX_MODE)
@@ -89,7 +90,8 @@ int IsKeyPressed(int key)
     bool current = (padData.Buttons & key) == key;
     bool last = (oldData.Buttons & key) == key;
     return current && last; // Currently pressed, and pressed last time
-    #elif defined(NSD_MODE)
+    #elif defined(NDS_MODE)
+    return keysHeld() & ((KEYPAD_BITS)key);
     #elif defined(CG_MODE)
     return keydown(key);
     #elif defined(FX_MODE)
@@ -115,7 +117,8 @@ int IsKeyDown(int key)
     bool current = (padData.Buttons & key) == key;
     bool last = (oldData.Buttons & key) == key;
     return current && !last; // Currently pressed, not pressed last time
-    #elif defined(NSD_MODE)
+    #elif defined(NDS_MODE)
+    return keysDown() & ((KEYPAD_BITS)key);
     #elif defined(CG_MODE)
     return keydown(key); //a changer
     #elif defined(FX_MODE)
@@ -153,7 +156,8 @@ int IsKeyUp(int key)
     bool current = (padData.Buttons & key) == key;
     bool last = (oldData.Buttons & key) == key;
     return !current && last; // Currently not pressed, and pressed last time
-    #elif defined(NSD_MODE)
+    #elif defined(NDS_MODE)
+    return keysUp() & ((KEYPAD_BITS)key);
     #elif defined(CG_MODE)
     //TODO: Implement
     #elif defined(FX_MODE)
@@ -169,7 +173,7 @@ int IsMouseButtonPressed(int button)
     //TODO: Implement
     #elif defined(PSP_MODE)
     
-    #elif defined(NSD_MODE)
+    #elif defined(NDS_MODE)
     #elif defined(CG_MODE)
     //TODO: Implement
     #elif defined(FX_MODE)
@@ -192,7 +196,7 @@ int IsMouseButtonDown(int button)
         return 0;
     }
     #elif defined(PSP_MODE)
-    #elif defined(NSD_MODE)
+    #elif defined(NDS_MODE)
     #elif defined(CG_MODE)
     //TODO: Implement
     #elif defined(FX_MODE)
@@ -215,7 +219,7 @@ int IsMouseButtonUp(int button)
         return 0;
     }
     #elif defined(PSP_MODE)
-    #elif defined(NSD_MODE)
+    #elif defined(NDS_MODE)
     #elif defined(CG_MODE)
     //TODO: Implement
     #elif defined(FX_MODE)

@@ -13,7 +13,18 @@ struct Vertex
 	float x, y, z;
 };
 
-#elif defined(NSD_MODE)
+#elif defined(NDS_MODE)
+#include <nds.h>
+#include <stdio.h>
+#include <string.h>
+#include "gl2d_Patched.h"
+#include <nds/touch.h>
+#include <nds/input.h>
+#include <filesystem.h>
+#include <dirent.h>
+
+extern int PaletteID;			// the all-white pal
+
 #elif defined(CG_MODE)
 #elif defined(FX_MODE)
 #endif
@@ -32,7 +43,7 @@ typedef struct PC_Color
     #if defined(WIN_MODE)
     #elif defined(PSP_MODE)
     u32 color;
-    #elif defined(NSD_MODE)
+    #elif defined(NDS_MODE)
     int _rgb15;
     #elif defined(CG_MODE)
     int Hexa;
@@ -55,5 +66,8 @@ void PC_DrawRect(int x, int y, int w, int h, PC_Color color);
 void PC_DrawFillRect(int x, int y, int w, int h, PC_Color color);
 //Draw a filled rectangle on the screen at (x, y) with the given width and height and color
 
+
+#define PC_WHITE PC_ColorCreate(255,255,255,255)
+#define PC_BLACK PC_ColorCreate(0,0,0,255)
 
 #endif

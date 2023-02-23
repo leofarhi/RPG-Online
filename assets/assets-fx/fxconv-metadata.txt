@@ -1,0 +1,40 @@
+font.png:
+  name: font
+  type: font
+  charset: print
+  grid.size: 5x7
+  grid.padding: 1
+  proportional: true
+UUID_17916205_c688_4995_b889_f684d0a3d833.png:
+type: bopti-image
+name: UUID_17916205_c688_4995_b889_f684d0a3d833
+UUID_1b7d9fb4_d9ce_4aa7_8000_7f8a841b69e6.png:
+type: bopti-image
+name: UUID_1b7d9fb4_d9ce_4aa7_8000_7f8a841b69e6
+UUID_2f83f055_347e_4f2e_8af7_e17dd43a106d.png:
+type: bopti-image
+name: UUID_2f83f055_347e_4f2e_8af7_e17dd43a106d
+UUID_3eae3ee7_0118_463f_bf47_700b8c2e62d0.png:
+type: bopti-image
+name: UUID_3eae3ee7_0118_463f_bf47_700b8c2e62d0
+UUID_4e2215df_ac3a_47f4_ae92_19691eb004cd.png:
+type: bopti-image
+name: UUID_4e2215df_ac3a_47f4_ae92_19691eb004cd
+UUID_5b65b8dd_1e6a_452e_926c_73b8b5f81c3d.png:
+type: bopti-image
+name: UUID_5b65b8dd_1e6a_452e_926c_73b8b5f81c3d
+UUID_67376378_7921_4067_8bf7_425387b1ea2d.png:
+type: bopti-image
+name: UUID_67376378_7921_4067_8bf7_425387b1ea2d
+UUID_b097fe97_d9ad_4f31_85bb_33cd0923bd39.png:
+type: bopti-image
+name: UUID_b097fe97_d9ad_4f31_85bb_33cd0923bd39
+UUID_b6ac4658_03b5_4e3d_8123_38f9657d4956.png:
+type: bopti-image
+name: UUID_b6ac4658_03b5_4e3d_8123_38f9657d4956
+UUID_d9d54676_be31_4dde_9c5a_8d4fda9c6503.png:
+type: bopti-image
+name: UUID_d9d54676_be31_4dde_9c5a_8d4fda9c6503
+UUID_ec47f2e6_4f8a_4de4_8639_76e13e196bbd.png:
+type: bopti-image
+name: UUID_ec47f2e6_4f8a_4de4_8639_76e13e196bbd
