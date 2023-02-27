@@ -373,22 +373,22 @@ class CasioDistribution(Distribution):
                 elif key == "p8_rgb565_bopti-image":
                     txt +="  name: IMG_ASSET_"+str(UUID)+"\n"
                     txt +="  type: bopti-image\n"
-                    txt +="  profile: p8_rgb565\n"
+                    txt +="  profile: p8\n"
 
                 elif key == "p8_rgb565a_bopti-image":
                     txt +="  name: IMG_ASSET_"+str(UUID)+"\n"
                     txt +="  type: bopti-image\n"
-                    txt +="  profile: p8_rgb565a\n"
+                    txt +="  profile: p8\n"
 
                 elif key == "p4_rgb565_bopti-image":
                     txt +="  name: IMG_ASSET_"+str(UUID)+"\n"
                     txt +="  type: bopti-image\n"
-                    txt +="  profile: p4_rgb565\n"
+                    txt +="  profile: p4\n"
 
                 elif key == "p4_rgb565a_bopti-image":
                     txt +="  name: IMG_ASSET_"+str(UUID)+"\n"
                     txt +="  type: bopti-image\n"
-                    txt +="  profile: p4_rgb565a\n"
+                    txt +="  profile: p4\n"
                 f.write(txt+"\n")
         #add virtual files in Resources.h
         textImg = "\n\t#if defined(CG_MODE) || defined(FX_MODE)\n"

@@ -12,6 +12,8 @@ find_package(Gint 2.1 REQUIRED)
 set(SOURCES
   #/*<SRC>*/
     src/main.c
+    src/testMain.c
+    src/testMain.h
     src/ParticuleEngine/ParticuleEngine.c
     src/ParticuleEngine/ParticuleEngine.h
     src/ParticuleEngine/ParticuleEngineDraw.c
@@ -24,6 +26,8 @@ set(SOURCES
     src/ParticuleEngine/ParticuleEngineTexture.h
     src/ParticuleEngine/Resources.c
     src/ParticuleEngine/Resources.h
+    src/Rpg/SpriteRpg.c
+    src/Rpg/SpriteRpg.h
     Libs/List/List.c
     Libs/List/List.h
 #/*</SRC>*/
@@ -40,7 +44,8 @@ assets/assets-fx/Images/test.png
 )
 set(ASSETS_cg
   #/*<IMG_CG>*/
-assets/assets-cg/Images/test.png
+assets/assets-cg/Images/Tiles/Outside_A1.png
+assets/assets-cg/Images/Tiles/Outside_A3.png
 #/*</IMG_CG>*/
   # ...
 )

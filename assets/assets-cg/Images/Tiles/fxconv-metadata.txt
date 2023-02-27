@@ -1,0 +1,10 @@
+Outside_A1.png:
+  name: IMG_ASSET_1f5f332f93554bd3b6cb3bd0b42e3517
+  type: bopti-image
+  profile: p8
+
+Outside_A3.png:
+  name: IMG_ASSET_7cc2c9fba0a24a69be936eaf5e5414ba
+  type: bopti-image
+  profile: p8
+

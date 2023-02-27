@@ -12,9 +12,10 @@ TITLE = Engine
 
 TARGET = $(OUTPUT)/$(TITLE)
 
-ListDir = Libs/List src/ParticuleEngine
+ListDir = Libs/List src/ParticuleEngine src/Rpg
 #print all folder in ListDir
 #$(info $(ListDir))
+
 
 SRC = $(wildcard *.c) $(wildcard src/*.c) $(foreach folder,$(ListDir),$(wildcard $(folder)/*.c))
 OBJ = ${SRC:.c=.o}

@@ -268,6 +268,7 @@ void PC_DrawSubTextureSize(PC_Texture* texture, int x, int y, int sx, int sy, in
     glAssignColorTable(0, texture->TextureID);
     glSubSpriteScale(x, y, sx, sy, sw, sh,w,h, texture->imageData);
     #elif defined(CG_MODE) || defined(FX_MODE)
+    dsubimage(x, y,texture->texture, sx, sy, sw, sh, DIMAGE_NONE);
     #endif
 }
 
@@ -327,6 +328,7 @@ void PC_DrawSubTextureSizeColored(PC_Texture* texture, int x, int y, int sx, int
     glAssignColorTable(0, texture->TextureID);
     glSubSpriteScale(x, y, sx, sy, sw, sh,w,h, texture->imageData);
     #elif defined(CG_MODE) || defined(FX_MODE)
+    dsubimage(x, y,texture->texture, sx, sy, sw, sh, DIMAGE_NONE);
     #endif
 }
 
