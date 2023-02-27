@@ -177,8 +177,8 @@ void PC_DrawTexture(PC_Texture* texture, int x, int y)
 	glSetActiveTexture(texture->TextureID);
 	glAssignColorTable(0, texture->TextureID);
     glSprite(x, y, GL_FLIP_NONE, texture->imageData);
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    dimage(x, y, texture->texture);
     #endif
 }
 
@@ -222,8 +222,8 @@ void PC_DrawSubTexture(PC_Texture* texture, int x, int y, int sx, int sy, int sw
     glSetActiveTexture(texture->TextureID);
     glAssignColorTable(0, texture->TextureID);
     glSubSprite(x, y, sx, sy, sw, sh, texture->imageData);
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    dsubimage(x, y,texture->texture, sx, sy, sw, sh, DIMAGE_NONE);
     #endif
 }
 
@@ -267,8 +267,7 @@ void PC_DrawSubTextureSize(PC_Texture* texture, int x, int y, int sx, int sy, in
     glSetActiveTexture(texture->TextureID);
     glAssignColorTable(0, texture->TextureID);
     glSubSpriteScale(x, y, sx, sy, sw, sh,w,h, texture->imageData);
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
     #endif
 }
 
@@ -327,8 +326,7 @@ void PC_DrawSubTextureSizeColored(PC_Texture* texture, int x, int y, int sx, int
     glSetActiveTexture(texture->TextureID);
     glAssignColorTable(0, texture->TextureID);
     glSubSpriteScale(x, y, sx, sy, sw, sh,w,h, texture->imageData);
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
     #endif
 }
 
@@ -339,8 +337,8 @@ int GetWidth(PC_Texture* texture){
     return texture->texture->width;
     #elif defined(NDS_MODE)
     return texture->width;
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    return texture->texture->width;
     #endif
 }
 int GetHeight(PC_Texture* texture){
@@ -350,7 +348,7 @@ int GetHeight(PC_Texture* texture){
     return texture->texture->height;
     #elif defined(NDS_MODE)
     return texture->height;
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    return texture->texture->height;
     #endif
 }

@@ -10,6 +10,7 @@ from tkinter import Spinbox
 from tkinter import Checkbutton
 import json
 import shutil
+import uuid
 #subprocess
 import subprocess
 
@@ -312,18 +313,101 @@ class CasioDistribution(Distribution):
         Modes=["bopti-image"]
         if "cg" in self.name.lower():
             Modes=["rgb565_bopti-image","rgb565a_bopti-image","p8_rgb565_bopti-image","p8_rgb565a_bopti-image","p4_rgb565_bopti-image","p4_rgb565a_bopti-image"]
-        Modes+=["Font"]#,"External_bopti-image"]
+        #Modes+=["Font","External_bopti-image"]
         FileTypes=[".png",".jpg",".jpeg",".bmp"]
         super().addTextures(Modes, FileTypes)
 
     def MakeAssets(self):
+        textImg = "\n"
         for file in self.DataFiles:
+            textImg += file.replace("\\","/")+"\n"
+        self.ReplaceVarsInFile("CMakeLists.txt", "IMG_CG", textImg)
+        #for all dirs in parent file reset fxconv-metadata.txt or create it
+        #list all files and get dir of each file
+        DirAss = set()
+        for file in self.DataFiles:
+            DirAss.add(os.path.dirname(file))
+        #for each dir create fxconv-metadata.txt or reset it
+        for dir in DirAss:
+            with open(dir + "/fxconv-metadata.txt", "w") as f:
+                f.write("")
+        #for each file add line to fxconv-metadata.txt
+        uuids = {}
+        for file,key in self.DataFiles.items():
+            if key == "":
+                print("Error: no key for file " + file)
+                continue
+            with open(os.path.dirname(file) + "/fxconv-metadata.txt", "a") as f:
+                #make switch for different modes
+                UUID = str(uuid.uuid4()).replace("-","")
+                uuids[file] = UUID
+                txt = os.path.basename(file) + ":\n"
+                if key == "Font":
+                    txt +="  name: IMG_ASSET_"+str(UUID)+"\n"
+                    txt +="  type: font\n"
+                    txt +="  charset: print\n"
+                    txt +="  grid.size: 13x16\n"
+                    raise Exception("A terminer!")
+                
+                elif key == "External_bopti-image":
+                    raise Exception("A terminer!")
+                
+                elif key == "bopti-image":
+                    txt +="  name: IMG_ASSET_"+str(UUID)+"\n"
+                    txt +="  type: bopti-image\n"
 
+                elif key == "rgb565_bopti-image":
+                    txt +="  name: IMG_ASSET_"+str(UUID)+"\n"
+                    txt +="  type: bopti-image\n"
+                    txt +="  profile: rgb565\n"
+
+                elif key == "rgb565a_bopti-image":
+                    txt +="  name: IMG_ASSET_"+str(UUID)+"\n"
+                    txt +="  type: bopti-image\n"
+                    txt +="  profile: rgb565a\n"
+
+                elif key == "p8_rgb565_bopti-image":
+                    txt +="  name: IMG_ASSET_"+str(UUID)+"\n"
+                    txt +="  type: bopti-image\n"
+                    txt +="  profile: p8_rgb565\n"
+
+                elif key == "p8_rgb565a_bopti-image":
+                    txt +="  name: IMG_ASSET_"+str(UUID)+"\n"
+                    txt +="  type: bopti-image\n"
+                    txt +="  profile: p8_rgb565a\n"
+
+                elif key == "p4_rgb565_bopti-image":
+                    txt +="  name: IMG_ASSET_"+str(UUID)+"\n"
+                    txt +="  type: bopti-image\n"
+                    txt +="  profile: p4_rgb565\n"
+
+                elif key == "p4_rgb565a_bopti-image":
+                    txt +="  name: IMG_ASSET_"+str(UUID)+"\n"
+                    txt +="  type: bopti-image\n"
+                    txt +="  profile: p4_rgb565a\n"
+                f.write(txt+"\n")
+        #add virtual files in Resources.h
+        textImg = "\n\t#if defined(CG_MODE) || defined(FX_MODE)\n"
+        for file,ID in uuids.items():
+            textImg += "extern bopti_image_t IMG_ASSET_"+str(ID)+";\n"
+        textImg += "\t#endif\n"
+        self.ReplaceVarsInFile("src/ParticuleEngine/Resources.h", "RSC", textImg)
+        #add virtual files in Resources.c
+        textImg = "\n\t#if defined(CG_MODE) || defined(FX_MODE)\n"
+        for file,ID in uuids.items():
+            desti = "assets/" + file.replace(self.AssetFolderString.get(), "")
+            while desti.find("\\") != -1 or desti.find("//") != -1:
+                desti = desti.replace("\\","/")
+                desti = desti.replace("//","/")
+            textImg += '\tAddTexture((unsigned char*)"'+desti+'", &IMG_ASSET_'+str(ID)+");\n"
+        textImg += "\t#endif\n"
+        self.ReplaceVarsInFile("src/ParticuleEngine/Resources.c", "RSC_LOAD", textImg)
     def Run(self):
         #remove run button
         pass
 
     def get(self):
+        self.UpdateDir()
         return {
             "AppName": self.AppNameString.get(),
             "AppVersion": self.AppVersionString.get(),
@@ -341,8 +425,10 @@ class CasioDistribution(Distribution):
         self.AppAuthorString.set(data["AppAuthor"])
         self.SrcFolderString.set(data["SrcFolder"])
         self.MakeCmdString.set(data["MakeCmd"])
+
         self.AssetFolderString.set(data["AssetFolder"])
         self.DataFiles = data["DataFiles"]
+        self.dirCheck.load(self.DataFiles)
 
     def Make(self):
         self.UpdateDir()

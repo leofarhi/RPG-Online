@@ -71,6 +71,9 @@ void LoadResources(){
     AllResources = List_new();
     #endif
 //*<RSC_LOAD>*/
+	#if defined(CG_MODE) || defined(FX_MODE)
+	AddTexture((unsigned char*)"assets/Images/test.png", &IMG_ASSET_0cddd983c5a44d03ab74a4e792ba3ce5);
+	#endif
 //*</RSC_LOAD>*/
 }
 

@@ -25,6 +25,9 @@ void LoadResources();
 void UnloadResources();
 
 //*<RSC>*/
+	#if defined(CG_MODE) || defined(FX_MODE)
+extern bopti_image_t IMG_ASSET_0cddd983c5a44d03ab74a4e792ba3ce5;
+	#endif
 //*</RSC>*/
 
 
