@@ -6,13 +6,16 @@ from tkinter import messagebox
 from tkinter import filedialog
 from tkinter import scrolledtext
 from tkinter import Menu
+from tkinter import Spinbox
+from tkinter import Checkbutton
 import json
+import shutil
 #subprocess
 import subprocess
 
 Make = Tk()
 Make.title("Configure Make")
-Make.geometry("400x400")
+#Make.geometry("400x400")
 #Make.resizable(0,0)
 
 #make DropDownMenu with buttons DS, 3DS, WII, ...
@@ -31,6 +34,84 @@ AppNameString = StringVar()
 AppVersionString = StringVar()
 AppAuthorString = StringVar()
 
+class DirectoryFileCheck(Frame):
+    def __init__(self, parent, path=None, modes=None, filetypes=None):
+        Frame.__init__(self, parent)
+        self.parent = parent
+        self.path = path
+        self.modes = modes
+        if self.modes == None:
+            self.modes = []
+        self.filetypes = filetypes
+        #list of check buttons at left and labels in center and Comboboxes at right foreach check button
+        #make list with grid and scroll bar
+        
+        #make Scrollbar and canvas
+        self.scrollbar = Scrollbar(self)
+        self.scrollbar.pack(side=RIGHT, fill=Y)
+        self.canvas = Canvas(self, yscrollcommand=self.scrollbar.set)
+        self.canvas.pack(side=LEFT, fill=BOTH, expand=1)
+        self.scrollbar.config(command=self.canvas.yview)
+        #make frame for canvas
+        self.frame = Frame(self.canvas)
+        self.canvas.create_window((0,0), window=self.frame, anchor=NW)
+        #make list of Frames for each file
+        self.CheckButtons = []
+        self.UpdateDir()
+    
+    def UpdateDir(self):
+        #clear list
+        for i in self.CheckButtons:
+            i[0].destroy()
+        self.CheckButtons = [] #list of tuples (frame, checkbutton, combobox)
+        if self.path == None or self.path == "":
+            return
+        #check if path is a directory
+        if not os.path.isdir(self.path):
+            return
+        #get list of files in directory recursively
+        self.files = []
+        for root, dirs, files in os.walk(self.path):
+            for file in files:
+                if self.filetypes == None or os.path.splitext(file)[1].lower() in self.filetypes:
+                    self.files.append(os.path.join(root, file))
+        #make check buttons for each file (with label and combobox in frame grid)
+        for ind, file in enumerate(self.files):
+            fm = Frame(self.frame)
+            fm.grid(row=ind, column=0, sticky=W)
+            #make check button
+            is_checked = IntVar()
+            cb = Checkbutton(fm, text=file, variable=is_checked)
+            cb.grid(row=0, column=0, sticky=W)
+            #make combobox
+            cboxString = StringVar()
+            cbox = ttk.Combobox(fm, textvariable=cboxString)
+            if (len(self.modes) > 0):
+                cbox.grid(row=0, column=2, sticky=W)
+            cbox["values"] = tuple(self.modes)
+            self.CheckButtons.append((fm, cb, cbox, is_checked, cboxString))
+        #update canvas
+        self.frame.update_idletasks()
+        self.canvas.config(scrollregion=self.canvas.bbox("all"))
+
+    def save(self):
+        Dico = {}
+        for i in self.CheckButtons:
+            if i[3].get() == 1:
+                Dico[i[1].cget("text")] = i[4].get()
+        return Dico
+    
+    def load(self, Dico):
+        self.UpdateDir()
+        for i in self.CheckButtons:
+            cb = i[1]
+            if cb.cget("text") in Dico:
+                cb.select()
+                i[4].set(Dico[cb.cget("text")])
+            else:
+                cb.deselect()
+                i[4].set("")
+        
 
 class Distribution:
     def __init__(self, MainFrame,name):
@@ -39,7 +120,7 @@ class Distribution:
         self.notebook.pack(side=TOP, fill=BOTH, expand=1)
        
         self.addGeneral()
-        #self.addTextures()
+        self.addTextures()
         #self.addFonts()
         #self.addAudio()
         self.addMake()
@@ -67,8 +148,27 @@ class Distribution:
         self.AppAuthorEntry = Entry(self.TabGeneral, textvariable=self.AppAuthorString)
         self.AppAuthorEntry.pack(side=TOP, fill=X)     
 
-    def addTextures(self):
-        pass
+    def addTextures(self, Modes=None, FileTypes=[".png",".jpg",".jpeg",".bmp"]):
+        self.TabTextures = ttk.Frame(self.notebook)
+        self.TabTextures.pack(side=TOP, fill=BOTH, expand=1)
+        self.notebook.add(self.TabTextures, text="Textures")
+        #make fields for asset folder
+        self.AssetFolder = Label(self.TabTextures, text="Asset Folder")
+        self.AssetFolder.pack(side=TOP, fill=X)
+        self.AssetFolderString = StringVar()
+        self.AssetFolderEntry = Entry(self.TabTextures, textvariable=self.AssetFolderString)
+        self.AssetFolderEntry.pack(side=TOP, fill=X)
+        
+        self.dirCheck = DirectoryFileCheck(self.TabTextures,self.AssetFolderString.get(),Modes, FileTypes)
+        self.dirCheck.pack(side=TOP, fill=BOTH, expand=1)
+        self.AssetFolderString.trace("w", self.UpdateDir)
+        self.DataFiles = self.dirCheck.save()
+
+    def UpdateDir(self, *args, **kwargs):
+        self.dirCheck.path = self.AssetFolderString.get()
+        self.DataFiles = self.dirCheck.save()
+        self.dirCheck.load(self.DataFiles)
+        self.DataFiles = self.dirCheck.save()
 
     def addFonts(self):
         pass
@@ -100,13 +200,17 @@ class Distribution:
         self.RunCmdEntry.pack(side=TOP, fill=X)
 
     def get(self):
+        self.UpdateDir()
         return {
             "AppName": self.AppNameString.get(),
             "AppVersion": self.AppVersionString.get(),
             "AppAuthor": self.AppAuthorString.get(),
             "MakeCmd": self.MakeCmdString.get(),
             "CleanCmd": self.CleanCmdString.get(),
-            "RunCmd": self.RunCmdString.get()
+            "RunCmd": self.RunCmdString.get(),
+
+            "AssetFolder": self.AssetFolderString.get(),
+            "DataFiles": self.DataFiles,
         }
 
     def set(self, data):
@@ -116,6 +220,9 @@ class Distribution:
         self.MakeCmdString.set(data["MakeCmd"])
         self.CleanCmdString.set(data["CleanCmd"])
         self.RunCmdString.set(data["RunCmd"])
+        self.AssetFolderString.set(data["AssetFolder"])
+        self.DataFiles = data["DataFiles"]
+        self.dirCheck.load(self.DataFiles)
 
     def show(self):
         self.notebook.pack(side=TOP, fill=BOTH, expand=1)
@@ -150,7 +257,22 @@ class Distribution:
         with open(filename, "w") as f:
             f.write(Text)
 
+    def MakeAssets(self):
+        #Make directory for assets if it doesnt exist in bin
+        if not os.path.exists("bin/assets"):
+            os.makedirs("bin/assets")
+        #copy all files in assets to bin/assets
+        for file in self.DataFiles:
+            desti = "bin/assets/" + file.replace(self.AssetFolderString.get(), "")
+            if not os.path.exists(os.path.dirname(desti)):
+                os.makedirs(os.path.dirname(desti))
+            shutil.copy(file, desti)
+            
+        
+
     def Make(self):
+        self.UpdateDir()
+        self.MakeAssets()
         cmdString = self.ReplaceVars(self.MakeCmdString.get())
         print("Running: " + cmdString)
         os.system(cmdString)
@@ -186,6 +308,17 @@ class CasioDistribution(Distribution):
         self.MakeCmdEntry = Entry(self.TabMake, textvariable=self.MakeCmdString)
         self.MakeCmdEntry.pack(side=TOP, fill=X)
 
+    def addTextures(self):
+        Modes=["bopti-image"]
+        if "cg" in self.name.lower():
+            Modes=["rgb565_bopti-image","rgb565a_bopti-image","p8_rgb565_bopti-image","p8_rgb565a_bopti-image","p4_rgb565_bopti-image","p4_rgb565a_bopti-image"]
+        Modes+=["Font"]#,"External_bopti-image"]
+        FileTypes=[".png",".jpg",".jpeg",".bmp"]
+        super().addTextures(Modes, FileTypes)
+
+    def MakeAssets(self):
+        for file in self.DataFiles:
+
     def Run(self):
         #remove run button
         pass
@@ -196,7 +329,10 @@ class CasioDistribution(Distribution):
             "AppVersion": self.AppVersionString.get(),
             "AppAuthor": self.AppAuthorString.get(),
             "SrcFolder": self.SrcFolderString.get(),
-            "MakeCmd": self.MakeCmdString.get()
+            "MakeCmd": self.MakeCmdString.get(),
+
+            "AssetFolder": self.AssetFolderString.get(),
+            "DataFiles": self.DataFiles,
         }
     
     def set(self, data):
@@ -205,8 +341,11 @@ class CasioDistribution(Distribution):
         self.AppAuthorString.set(data["AppAuthor"])
         self.SrcFolderString.set(data["SrcFolder"])
         self.MakeCmdString.set(data["MakeCmd"])
+        self.AssetFolderString.set(data["AssetFolder"])
+        self.DataFiles = data["DataFiles"]
 
     def Make(self):
+        self.UpdateDir()
         #find all files in SrcFolder .h and .c and .hpp and .cpp
         srcList = []
         srcFolder = self.SrcFolderString.get()
@@ -229,6 +368,7 @@ class CasioDistribution(Distribution):
         textDirOut = '\nset(DIR_OUT "bin")\n'
         self.ReplaceVarsInFile("CMakeLists.txt", "DIR_OUT_FIELD", textDirOut)
         #ParticuleEngine
+        self.MakeAssets()
 
         #run make
         cmdString = self.ReplaceVars(self.MakeCmdString.get())
@@ -242,14 +382,26 @@ class PspDistribution(Distribution):
         super().__init__(MainFrame, name)
 
     def Make(self):
+        self.UpdateDir()
+        self.MakeAssets()
         textProgName = '\n#define PROJECT_NAME "' + self.AppNameString.get() + '"\n'
         self.ReplaceVarsInFile("src/ParticuleEngine/Resources.c", "PROJECT_NAME", textProgName)
         super().Make()
 
+class WinDistribution(Distribution):
+    def __init__(self, MainFrame, name):
+        super().__init__(MainFrame, name)
+
+    def addTextures(self):
+        Modes=None
+        FileTypes=[".png",".jpg",".jpeg",".bmp",".ttf"]
+        super().addTextures(Modes, FileTypes)
+
 DictSpecialDistributions = {
     "Casio CG": CasioDistribution,
     "Casio FX": CasioDistribution,
-    "PSP": PspDistribution
+    "PSP": PspDistribution,
+    "Windows": WinDistribution,
 }
 
 #make Distribution objects
@@ -284,6 +436,7 @@ def ReplaceVars(string, data):
 
 #make function for when MakeButton is pressed
 def make(event, *args):
+    SaveConfig()
     print("Make")
     #get distribution currently selected
     Dist = Distribs[DropDownMenu.current()]
@@ -291,6 +444,7 @@ def make(event, *args):
     Dist.Make()
 
 def clean(event, *args):
+    SaveConfig()
     print("Clean")
     #get distribution currently selected
     Dist = Distribs[DropDownMenu.current()]
@@ -298,6 +452,7 @@ def clean(event, *args):
     Dist.Clean()
 
 def run(event, *args):
+    SaveConfig()
     print("Run")
     #get distribution currently selected
     Dist = Distribs[DropDownMenu.current()]

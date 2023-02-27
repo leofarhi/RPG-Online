@@ -8,17 +8,17 @@
 int main(){//int argc, char *argv[]) {
     PC_Init();
     int i = 0;
-    const char* pathImg = "libs/images/test.png";
+    const char* pathImg = "assets/Images/test.png";
     #ifdef NDS_MODE
     AddTexture((unsigned char*)pathImg, Tilesets_Outside_A1Bitmap, Tilesets_Outside_A1Pal,256,192);
-    AddTexture((unsigned char*)"libs/fonts/Font.png", FontBitmap, FontPal, 128, 128);
+    AddTexture((unsigned char*)"assets/Fonts/Font.png", FontBitmap, FontPal, 128, 128);
     #endif
     PC_Texture* texture = PC_LoadTexture(pathImg);
     PC_Font* font = NULL;
     #if defined(WIN_MODE)
-    font = PC_LoadFont("libs/fonts/Calibri.ttf", 20);
+    font = PC_LoadFont("assets/Fonts/Calibri.ttf", 20);
     #elif defined(PSP_MODE) || defined(NDS_MODE)
-    font = PC_LoadFont("libs/fonts/Font.png", 20, 8, 8, 16, 16);
+    font = PC_LoadFont("assets/Fonts/Font.png", 20, 8, 8, 16, 16);
     #endif
     while (1)
     {
