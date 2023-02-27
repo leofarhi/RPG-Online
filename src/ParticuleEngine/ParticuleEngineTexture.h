@@ -25,8 +25,6 @@ struct VertexTexture
 	float x, y, z;
 };
 #elif defined(NDS_MODE)
-#include "Tilesets_Outside_A1.h"
-#include "Font.h"
 #elif defined(CG_MODE) || defined(FX_MODE)
 #endif
 

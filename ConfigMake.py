@@ -13,6 +13,7 @@ import shutil
 import uuid
 #subprocess
 import subprocess
+from PIL import Image
 
 Make = Tk()
 Make.title("Configure Make")
@@ -321,7 +322,10 @@ class CasioDistribution(Distribution):
         textImg = "\n"
         for file in self.DataFiles:
             textImg += file.replace("\\","/")+"\n"
-        self.ReplaceVarsInFile("CMakeLists.txt", "IMG_CG", textImg)
+        if "cg" in self.name.lower():
+            self.ReplaceVarsInFile("CMakeLists.txt", "IMG_CG", textImg)
+        else:
+            self.ReplaceVarsInFile("CMakeLists.txt", "IMG_FX", textImg)
         #for all dirs in parent file reset fxconv-metadata.txt or create it
         #list all files and get dir of each file
         DirAss = set()
@@ -483,11 +487,63 @@ class WinDistribution(Distribution):
         FileTypes=[".png",".jpg",".jpeg",".bmp",".ttf"]
         super().addTextures(Modes, FileTypes)
 
+class NdsDistribution(Distribution):
+    def __init__(self, MainFrame, name):
+        super().__init__(MainFrame, name)
+
+    def addTextures(self):
+        Modes=[]
+        FileTypes=[".png",".jpg",".jpeg",".bmp"]
+        super().addTextures(Modes, FileTypes)
+
+    def MakeAssets(self):
+        uuids = {}
+        #remove build/assets folder if exist (remove all files and folder)
+        if os.path.exists("build/assets"):
+            shutil.rmtree("build/assets")
+        #create build/assets folder
+        os.makedirs("build/assets/GraphicsData")
+        os.makedirs("build/assets/nitrodata")
+        for file in self.DataFiles:
+            UUID = str(uuid.uuid4()).replace("-", "")
+            #make grit file
+            gname = "build/assets/GraphicsData/IMG_ASSET_" + UUID + ".grit"
+            with open(gname, "w") as f:
+                txt = "# Set the warning/log level to 3\n-W3\n#bitmap mode\n-gb\n# Set the bit depth to 8 (256 colors)\n-gB8\n#include pal\n-p"
+                f.write(txt)
+            #copy file in build/assets
+            fname = file.replace(self.AssetFolderString.get(), "").replace("\\", "/").replace("//", "/")
+            fname = fname.replace("/", "_")
+            fname = "build/assets/GraphicsData/IMG_ASSET_" + UUID + os.path.splitext(fname)[1]
+            shutil.copyfile(file, fname)
+
+            uuids[file] = UUID
+        #add virtual files in Resources.h
+        textImg = "\n\t#if defined(NDS_MODE)\n"
+        for file,ID in uuids.items():
+            textImg += "#include \"IMG_ASSET_" + ID + ".h\"\n"
+        textImg += "\t#endif"
+        self.ReplaceVarsInFile("src/ParticuleEngine/Resources.h", "RSC", textImg)
+        #add virtual files in Resources.c
+        textImg = "\n\t#if defined(NDS_MODE)\n"
+        for file,ID in uuids.items():
+            #open image and get size
+            img = Image.open(file)
+            width, height = img.size
+            desti = "assets/" + file.replace(self.AssetFolderString.get(), "")
+            while desti.find("\\") != -1 or desti.find("//") != -1:
+                desti = desti.replace("\\","/")
+                desti = desti.replace("//","/")
+            textImg += '\tAddTexture((unsigned char*)"'+desti+'", IMG_ASSET_'+str(ID)+"Bitmap,IMG_ASSET_"+str(ID)+"Pal,"+str(width)+","+str(height)+");\n"
+        textImg += "\t#endif\n"
+        self.ReplaceVarsInFile("src/ParticuleEngine/Resources.c", "RSC_LOAD", textImg)
+
 DictSpecialDistributions = {
     "Casio CG": CasioDistribution,
     "Casio FX": CasioDistribution,
     "PSP": PspDistribution,
     "Windows": WinDistribution,
+    "DS": NdsDistribution,
 }
 
 #make Distribution objects

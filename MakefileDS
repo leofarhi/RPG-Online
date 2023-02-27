@@ -25,7 +25,7 @@ include $(DEVKITARM)/ds_rules
 ListDir		+=  Libs/NDS
 
 SOURCES		:=	src $(ListDir)#src src/SubFolder
-ASSETS 		:=  assets/assets-ds
+ASSETS 		:=  build/assets
 DATA		:=	$(ASSETS)/BinaryData
 INCLUDES	:=	$(ListDir)
 GRAPHICS	:=	$(ASSETS)/GraphicsData

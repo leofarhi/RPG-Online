@@ -1,0 +1,4 @@
+test.png:
+  name: IMG_ASSET_e562f458af6e46a7b971e3760b37307b
+  type: bopti-image
+

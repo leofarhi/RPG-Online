@@ -35,7 +35,7 @@ set(ASSETS
 )
 set(ASSETS_fx
   #/*<IMG_FX>*/
-
+assets/assets-fx/Images/test.png
 #/*</IMG_FX>*/
 )
 set(ASSETS_cg

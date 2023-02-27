@@ -25,10 +25,10 @@ void LoadResources();
 void UnloadResources();
 
 //*<RSC>*/
-	#if defined(CG_MODE) || defined(FX_MODE)
-extern bopti_image_t IMG_ASSET_0cddd983c5a44d03ab74a4e792ba3ce5;
-	#endif
-//*</RSC>*/
+	#if defined(NDS_MODE)
+#include "IMG_ASSET_41a8ce6b6d724607a061ad52c70d9fa5.h"
+#include "IMG_ASSET_032273f9336e493ebe637da509ae2143.h"
+	#endif//*</RSC>*/
 
 
 #endif

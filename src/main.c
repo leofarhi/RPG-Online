@@ -8,12 +8,7 @@
 int main(){//int argc, char *argv[]) {
     PC_Init();
     int i = 0;
-    const char* pathImg = "assets/Images/test.png";
-    #ifdef NDS_MODE
-    AddTexture((unsigned char*)pathImg, Tilesets_Outside_A1Bitmap, Tilesets_Outside_A1Pal,256,192);
-    AddTexture((unsigned char*)"assets/Fonts/Font.png", FontBitmap, FontPal, 128, 128);
-    #endif
-    PC_Texture* texture = PC_LoadTexture(pathImg);
+    PC_Texture* texture = PC_LoadTexture("assets/Images/test.png");
     PC_Font* font = NULL;
     #if defined(WIN_MODE)
     font = PC_LoadFont("assets/Fonts/Calibri.ttf", 20);
@@ -32,7 +27,7 @@ int main(){//int argc, char *argv[]) {
         PC_DrawFillRect(100, 100, 100, 100, color);
         color = PC_ColorCreate(255, 0, 0, 255);
         PC_DrawPoint(200, 200, color);
-        color = PC_ColorCreate(0, 255, 0, 255);
+        color = PC_ColorCreate(255, 255, 0, 255);
 
         if (texture!=NULL)
             PC_DrawFillRect(0+(int)i, 10, 50, 50, color);
@@ -57,7 +52,7 @@ int main(){//int argc, char *argv[]) {
             i++;
         if (IsKeyPressed(KEY_LEFT))
             i--;
-        #endif
+        #endif*/
         #if defined(CG_MODE) || defined(FX_MODE)
         if (IsKeyPressed(KEY_RIGHT))
             i++;
@@ -67,7 +62,7 @@ int main(){//int argc, char *argv[]) {
             break;
         #endif
         //PC_DrawTexture(texture, 0, 0);
-        PC_DrawSubTexture(texture, 50, 50, 0, 0, 50, 50);
+        PC_DrawSubTexture(texture, 50, 0, 0, 0, 50, 50);
         PC_DrawSubTextureSize(texture, 150, 50, 0, 0, 50, 50, 100, 100);
         color = PC_ColorCreate(100, 100, 255, 255);
         PC_DrawSubTextureSizeColored(texture, 150, 150, 0, 0, 50, 50, 100, 100, color);
