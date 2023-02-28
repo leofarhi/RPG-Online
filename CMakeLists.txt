@@ -44,8 +44,25 @@ assets/assets-fx/Images/test.png
 )
 set(ASSETS_cg
   #/*<IMG_CG>*/
+assets/assets-cg/Images/Tiles/Dungeon_A1.png
+assets/assets-cg/Images/Tiles/Dungeon_A2.png
+assets/assets-cg/Images/Tiles/Dungeon_A4.png
+assets/assets-cg/Images/Tiles/Dungeon_A5.png
+assets/assets-cg/Images/Tiles/Dungeon_B.png
+assets/assets-cg/Images/Tiles/Dungeon_C.png
+assets/assets-cg/Images/Tiles/Inside_A1.png
+assets/assets-cg/Images/Tiles/Inside_A2.png
+assets/assets-cg/Images/Tiles/Inside_A4.png
+assets/assets-cg/Images/Tiles/Inside_A5.png
+assets/assets-cg/Images/Tiles/Inside_B.png
+assets/assets-cg/Images/Tiles/Inside_C.png
 assets/assets-cg/Images/Tiles/Outside_A1.png
+assets/assets-cg/Images/Tiles/Outside_A2.png
 assets/assets-cg/Images/Tiles/Outside_A3.png
+assets/assets-cg/Images/Tiles/Outside_A4.png
+assets/assets-cg/Images/Tiles/Outside_A5.png
+assets/assets-cg/Images/Tiles/Outside_B.png
+assets/assets-cg/Images/Tiles/Outside_C.png
 #/*</IMG_CG>*/
   # ...
 )

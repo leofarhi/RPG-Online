@@ -1114,10 +1114,10 @@ void glSubSprite(int x, int y, int subX, int subY, int subW, int subH, const glI
 	int x2 = x + subW;
 	int y2 = y + subH;
 
-	int u1 = subX;
-	int u2 = subX + subW;
-	int v1 = subY;
-	int v2 = subY + subH;
+	int	u1 = spr->u_off + subX+1;
+	int	u2 = spr->u_off + subX+subW - 1;
+	int v1 = spr->v_off + subY+1;
+	int v2 = spr->v_off + subY+subH - 1;
 
 	if (spr->textureID != gCurrentTexture)
 	{
@@ -1127,7 +1127,7 @@ void glSubSprite(int x, int y, int subX, int subY, int subW, int subH, const glI
 
 	glBegin(GL_QUADS);
 
-	gxTexcoord2i(u1, v1); gxVertex3i(x1, y1, g_depth);
+	gxTexcoord2i(u1, v1); gxVertex2i(x1, y1);
 	gxTexcoord2i(u1, v2); gxVertex2i(x1, y2);
 	gxTexcoord2i(u2, v2); gxVertex2i(x2, y2);
 	gxTexcoord2i(u2, v1); gxVertex2i(x2, y1);
@@ -1138,6 +1138,7 @@ void glSubSprite(int x, int y, int subX, int subY, int subW, int subH, const glI
 
 }
 
+
 void glSubSpriteScale(int x, int y, int subX, int subY, int subW, int subH,int scaleX, int scaleY, const glImage* spr)
 {
 	int x1 = x;
@@ -1145,10 +1146,10 @@ void glSubSpriteScale(int x, int y, int subX, int subY, int subW, int subH,int s
 	int x2 = x + scaleX;
 	int y2 = y + scaleY;
 
-	int u1 = subX;
-	int u2 = subX + subW;
-	int v1 = subY;
-	int v2 = subY + subH;
+	int	u1 = spr->u_off + subX+1;
+	int	u2 = spr->u_off + subX+subW - 1;
+	int v1 = spr->v_off + subY+1;
+	int v2 = spr->v_off + subY+subH - 1;
 
 	if (spr->textureID != gCurrentTexture)
 	{
@@ -1158,7 +1159,7 @@ void glSubSpriteScale(int x, int y, int subX, int subY, int subW, int subH,int s
 
 	glBegin(GL_QUADS);
 
-	gxTexcoord2i(u1, v1); gxVertex3i(x1, y1, g_depth);
+	gxTexcoord2i(u1, v1); gxVertex2i(x1, y1);
 	gxTexcoord2i(u1, v2); gxVertex2i(x1, y2);
 	gxTexcoord2i(u2, v2); gxVertex2i(x2, y2);
 	gxTexcoord2i(u2, v1); gxVertex2i(x2, y1);

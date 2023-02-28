@@ -12,7 +12,7 @@
 #define TILE_SIZE 48
 #elif defined(NDS_MODE)
 #define INIT_TILE_SIZE 16
-#define TILE_SIZE 32
+#define TILE_SIZE 24
 #elif defined(PSP_MODE)
 #define INIT_TILE_SIZE 16
 #define TILE_SIZE 32

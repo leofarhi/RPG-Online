@@ -72,10 +72,9 @@ void LoadResources(){
     #endif
 //*<RSC_LOAD>*/
 	#if defined(NDS_MODE)
-	AddTexture((unsigned char*)"assets/Fonts/Font.png", IMG_ASSET_4cd603af1de04bd0a744c312fc4b2abdBitmap,IMG_ASSET_4cd603af1de04bd0a744c312fc4b2abdPal,128,128);
-	AddTexture((unsigned char*)"assets/Images/test.png", IMG_ASSET_69fa4f661a0a461489dddfb267322f13Bitmap,IMG_ASSET_69fa4f661a0a461489dddfb267322f13Pal,256,256);
-	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_A1.png", IMG_ASSET_46475d9ddd964c03a1a35ff8ca91490aBitmap,IMG_ASSET_46475d9ddd964c03a1a35ff8ca91490aPal,256,256);
-	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_A3.png", IMG_ASSET_7638fe2d95b841edaea6e4cbcf387df8Bitmap,IMG_ASSET_7638fe2d95b841edaea6e4cbcf387df8Pal,256,128);
+	AddTexture((unsigned char*)"assets/Fonts/Font.png", IMG_ASSET_280fc51b24f349439e1a8a0ca6ea6705Bitmap,IMG_ASSET_280fc51b24f349439e1a8a0ca6ea6705Pal,128,128);
+	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_A1.png", IMG_ASSET_5fd89ba580e4445ba5093b76e22bbb39Bitmap,IMG_ASSET_5fd89ba580e4445ba5093b76e22bbb39Pal,256,256);
+	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_A3.png", IMG_ASSET_adaa796b9954457bae7eb05f04d6294eBitmap,IMG_ASSET_adaa796b9954457bae7eb05f04d6294ePal,256,128);
 	#endif
 //*</RSC_LOAD>*/
 }

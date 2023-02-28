@@ -1,10 +1,95 @@
+Dungeon_A1.png:
+  name: IMG_ASSET_d64e3486b92d42859823aec6d9b6b91d
+  type: bopti-image
+  profile: p8
+
+Dungeon_A2.png:
+  name: IMG_ASSET_deae16c5129f4d27910cf758f9b3b81b
+  type: bopti-image
+  profile: p8
+
+Dungeon_A4.png:
+  name: IMG_ASSET_b811db40d4d147d499f890b06b8cdecb
+  type: bopti-image
+  profile: p8
+
+Dungeon_A5.png:
+  name: IMG_ASSET_e0dd012c25db44d8b2b6a08e33b91483
+  type: bopti-image
+  profile: p8
+
+Dungeon_B.png:
+  name: IMG_ASSET_4498a6aee1b543d5bcbdab8bd33adc44
+  type: bopti-image
+  profile: p8
+
+Dungeon_C.png:
+  name: IMG_ASSET_32d3fd2f439f4e46b8caac5d2b059ae0
+  type: bopti-image
+  profile: p8
+
+Inside_A1.png:
+  name: IMG_ASSET_d776c51f8054490fb4e608d48c858b68
+  type: bopti-image
+  profile: p8
+
+Inside_A2.png:
+  name: IMG_ASSET_92fa540d59d541d3938f83f9006729f9
+  type: bopti-image
+  profile: p8
+
+Inside_A4.png:
+  name: IMG_ASSET_0467f0fb1da84e93afb3cc78f30f3714
+  type: bopti-image
+  profile: p8
+
+Inside_A5.png:
+  name: IMG_ASSET_15c23dbfe015482b9500440bb88c5d38
+  type: bopti-image
+  profile: p8
+
+Inside_B.png:
+  name: IMG_ASSET_9aaa44cac2ea47048b49dfe4d8467bfb
+  type: bopti-image
+  profile: p8
+
+Inside_C.png:
+  name: IMG_ASSET_4d1230950f2c4be9a93d936f1797e450
+  type: bopti-image
+  profile: p8
+
 Outside_A1.png:
-  name: IMG_ASSET_1f5f332f93554bd3b6cb3bd0b42e3517
+  name: IMG_ASSET_aa1507fd05e04094b61090364806629e
+  type: bopti-image
+  profile: p8
+
+Outside_A2.png:
+  name: IMG_ASSET_391ef105eea54ccb8d5b7c810e429ec4
   type: bopti-image
   profile: p8
 
 Outside_A3.png:
-  name: IMG_ASSET_7cc2c9fba0a24a69be936eaf5e5414ba
+  name: IMG_ASSET_71f47ee4b7444025bbf195865b208b60
+  type: bopti-image
+  profile: p8
+
+Outside_A4.png:
+  name: IMG_ASSET_53df983000bd430baa53e362fa0d25a4
+  type: bopti-image
+  profile: p8
+
+Outside_A5.png:
+  name: IMG_ASSET_07ea247d5e314addaea59e3a2512a49c
+  type: bopti-image
+  profile: p8
+
+Outside_B.png:
+  name: IMG_ASSET_67bae794a9a64ad19c914856d9d81d7f
+  type: bopti-image
+  profile: p8
+
+Outside_C.png:
+  name: IMG_ASSET_12966cae72044c68907b27f16b7ba59a
   type: bopti-image
   profile: p8
 

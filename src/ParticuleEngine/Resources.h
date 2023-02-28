@@ -26,10 +26,9 @@ void UnloadResources();
 
 //*<RSC>*/
 	#if defined(NDS_MODE)
-#include "IMG_ASSET_4cd603af1de04bd0a744c312fc4b2abd.h"
-#include "IMG_ASSET_69fa4f661a0a461489dddfb267322f13.h"
-#include "IMG_ASSET_46475d9ddd964c03a1a35ff8ca91490a.h"
-#include "IMG_ASSET_7638fe2d95b841edaea6e4cbcf387df8.h"
+#include "IMG_ASSET_280fc51b24f349439e1a8a0ca6ea6705.h"
+#include "IMG_ASSET_5fd89ba580e4445ba5093b76e22bbb39.h"
+#include "IMG_ASSET_adaa796b9954457bae7eb05f04d6294e.h"
 	#endif//*</RSC>*/
 
 
