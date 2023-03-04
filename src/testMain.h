@@ -7,6 +7,13 @@
 #include "ParticuleEngine/ParticuleEngineFont.h"
 #include "ParticuleEngine/Resources.h"
 
+#include "Rpg/SpriteRpg.h"
+#include "InterfaceSystem/InterfaceSystem.h"
+
+#include "Rpg/World.h"
+
 void LoopTest();
+void ExampleDrawRpg();
+void ExampleDrawUI();
 
 #endif

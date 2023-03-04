@@ -1,5 +1,5 @@
 test.png:
-  name: IMG_ASSET_651757e3a1094516ac380b37b29b7196
+  name: IMG_ASSET_31f19d6da9c14d6884b855a701bba98d
   type: bopti-image
-  profile: rgb565a
+  profile: p8
 

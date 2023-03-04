@@ -14,6 +14,10 @@ set(SOURCES
     src/main.c
     src/testMain.c
     src/testMain.h
+    src/InterfaceSystem/EventDataSystem.c
+    src/InterfaceSystem/EventDataSystem.h
+    src/InterfaceSystem/InterfaceSystem.c
+    src/InterfaceSystem/InterfaceSystem.h
     src/ParticuleEngine/ParticuleEngine.c
     src/ParticuleEngine/ParticuleEngine.h
     src/ParticuleEngine/ParticuleEngineDraw.c
@@ -26,10 +30,18 @@ set(SOURCES
     src/ParticuleEngine/ParticuleEngineTexture.h
     src/ParticuleEngine/Resources.c
     src/ParticuleEngine/Resources.h
+    src/Rpg/Camera.c
+    src/Rpg/Camera.h
+    src/Rpg/Chunk.c
+    src/Rpg/Chunk.h
     src/Rpg/SpriteRpg.c
     src/Rpg/SpriteRpg.h
+    src/Rpg/World.c
+    src/Rpg/World.h
     Libs/List/List.c
     Libs/List/List.h
+    Libs/CASIO/MyKeyboard.c
+    Libs/CASIO/MyKeyboard.h
 #/*</SRC>*/
   # ...
 )
@@ -39,36 +51,22 @@ set(ASSETS
 )
 set(ASSETS_fx
   #/*<IMG_FX>*/
-assets/assets-fx/Images/test.png
 #/*</IMG_FX>*/
 )
 set(ASSETS_cg
   #/*<IMG_CG>*/
-assets/assets-cg/Images/Tiles/Dungeon_A1.png
-assets/assets-cg/Images/Tiles/Dungeon_A2.png
-assets/assets-cg/Images/Tiles/Dungeon_A4.png
-assets/assets-cg/Images/Tiles/Dungeon_A5.png
-assets/assets-cg/Images/Tiles/Dungeon_B.png
-assets/assets-cg/Images/Tiles/Dungeon_C.png
-assets/assets-cg/Images/Tiles/Inside_A1.png
-assets/assets-cg/Images/Tiles/Inside_A2.png
-assets/assets-cg/Images/Tiles/Inside_A4.png
-assets/assets-cg/Images/Tiles/Inside_A5.png
-assets/assets-cg/Images/Tiles/Inside_B.png
-assets/assets-cg/Images/Tiles/Inside_C.png
+assets/assets-cg/Images/test.png
 assets/assets-cg/Images/Tiles/Outside_A1.png
-assets/assets-cg/Images/Tiles/Outside_A2.png
 assets/assets-cg/Images/Tiles/Outside_A3.png
-assets/assets-cg/Images/Tiles/Outside_A4.png
-assets/assets-cg/Images/Tiles/Outside_A5.png
-assets/assets-cg/Images/Tiles/Outside_B.png
-assets/assets-cg/Images/Tiles/Outside_C.png
 #/*</IMG_CG>*/
   # ...
 )
 
 include_directories(Libs/List)
 link_directories(Libs/List)
+
+include_directories(Libs/CASIO)
+link_directories(Libs/CASIO)
 
 fxconv_declare_assets(${ASSETS} ${ASSETS_fx} ${ASSETS_cg} WITH_METADATA)
 

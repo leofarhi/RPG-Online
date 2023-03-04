@@ -54,11 +54,48 @@ void ResetDirectory()
 #include <pspgu.h>
 #include <pspgum.h>
 
+#include <pspkernel.h>
+#include <pspdebug.h>
+
 #elif defined(NDS_MODE)
 int slcScreen = 0;
-#elif defined(CG_MODE)
-#elif defined(FX_MODE)
+#elif defined(CG_MODE) || defined(FX_MODE)
+#include <libprof.h>
+prof_t FPS;
 #endif
+
+
+Vector2 vector2_create(int x, int y){
+    Vector2 vec;
+    vec.x = x;
+    vec.y = y;
+    return vec;
+}
+
+Vector2* vector2_create_ptr(int x, int y){
+    Vector2* vec = malloc(sizeof(Vector2));
+    vec->x = x;
+    vec->y = y;
+    return vec;
+}
+
+Vector3 vector3_create(int x, int y, int z)
+{
+    Vector3 vec;
+    vec.x = x;
+    vec.y = y;
+    vec.z = z;
+    return vec;
+}
+
+Vector3* vector3_create_ptr(int x, int y, int z)
+{
+    Vector3* vec = malloc(sizeof(Vector3));
+    vec->x = x;
+    vec->y = y;
+    vec->z = z;
+    return vec;
+}
 
 void PC_Init()
 {
@@ -86,7 +123,8 @@ void PC_Init()
         // Initializes the font library.
         if (TTF_Init() == -1)
             errx(EXIT_FAILURE, "error TTF_Init %s", TTF_GetError());
-
+        //enable Alpha Blending
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
         // Dispatches the events.
         InputEvents = List_new();
         InputEventsHeld = List_new();
@@ -95,7 +133,7 @@ void PC_Init()
         SetupCallbacks();
 
         // Initialize Graphics
-        initGraphics(list);
+        initGraphics(PSP_list);
 
         // Initialize Matrices
         sceGumMatrixMode(GU_PROJECTION);
@@ -115,6 +153,7 @@ void PC_Init()
         videoSetModeSub(MODE_5_2D | DISPLAY_BG2_ACTIVE);
 
         consoleDemoInit();
+        keyboardDemoInit();
         glScreen2D();
         nitroFSInit(NULL);
         //dirlist("/");
@@ -150,8 +189,8 @@ void PC_Init()
         glColorTableEXT(0, 0, 256, 0, 0, hitPal);
         // free some memory
         free(hitPal);
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
+        InputEvents = List_new();
     #endif
     LoadResources();
 }
@@ -181,8 +220,7 @@ void PC_Quit()
         // Exit Game
         sceKernelExitGame();
     #elif defined(NDS_MODE)
-    #elif defined(CG_MODE)
-    #elif defined(FX_MODE)
+    #elif defined(CG_MODE) || defined(FX_MODE)
     #endif
 }
 
@@ -192,7 +230,7 @@ void ClearScreen()
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
     #elif defined(PSP_MODE)
-        startFrame(list);
+        startFrame(PSP_list);
 
         // We're doing a 2D, Non-Textured render 
         sceGuDisable(GU_DEPTH_TEST);
@@ -207,7 +245,7 @@ void ClearScreen()
     	glBegin2D();
 	    glBoxFilled(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, PC_BLACK._rgb15);
     #elif defined(CG_MODE) || defined(FX_MODE)
-    dclear(C_BLACK);
+        dclear(C_BLACK);
     #endif
 }
 
@@ -223,7 +261,7 @@ void UpdateScreen()
         //glFlush(1);
         swiWaitForVBlank();
     #elif defined(CG_MODE) || defined(FX_MODE)
-    dupdate();
+        dupdate();
     #endif
 }
 
@@ -234,5 +272,18 @@ void SelectScreen(int screen)
     #elif defined(NDS_MODE)
     #elif defined(CG_MODE)
     #elif defined(FX_MODE)
+    #endif
+}
+
+int GetFPS()
+{
+    #if defined(WIN_MODE)
+        return 0;
+    #elif defined(PSP_MODE)
+        return 0;
+    #elif defined(NDS_MODE)
+        return 0;
+    #elif defined(CG_MODE) || defined(FX_MODE)
+        return 0;
     #endif
 }

@@ -15,6 +15,29 @@ import uuid
 import subprocess
 from PIL import Image
 
+def GetTrueSizeImage(path):
+    #les images sont remplis avec des pixels transparents a la fin
+    #pour avoir la taille de l'image sans les pixels transparents
+    #on ouvre l'image avec PIL et on recupere la taille de l'image
+    #sans les pixels transparents
+    img = Image.open(path)
+    #detecter si l'image est en mode RGBA
+    if img.mode == "RGBA":
+        #detecter la derniere ligne horizontale sans pixels transparents
+        #et la derniere colonne verticale sans pixels transparents
+        x = 0
+        y = 0
+        for i in range(img.size[0]):
+            for j in range(img.size[1]):
+                if img.getpixel((i,j))[3] != 0:
+                    x = max(x, i)
+                    y = max(y, j)
+        #on retourne la taille de l'image sans les pixels transparents
+        return (x+1, y+1)
+    else:
+        return img.size
+
+
 Make = Tk()
 Make.title("Configure Make")
 #Make.geometry("400x400")
@@ -447,6 +470,8 @@ class CasioDistribution(Distribution):
                     srcList[-1] = srcList[-1].replace("\\", "/")
         srcList.append("Libs/List/List.c")
         srcList.append("Libs/List/List.h")
+        srcList.append("Libs/CASIO/MyKeyboard.c")
+        srcList.append("Libs/CASIO/MyKeyboard.h")
         print(srcList)
         textSrc = "\n"
         for i in range(0, len(srcList)):
@@ -477,6 +502,25 @@ class PspDistribution(Distribution):
         textProgName = '\n#define PROJECT_NAME "' + self.AppNameString.get() + '"\n'
         self.ReplaceVarsInFile("src/ParticuleEngine/Resources.c", "PROJECT_NAME", textProgName)
         super().Make()
+
+    def MakeAssets(self):
+        super().MakeAssets()
+        #add virtual size files in Resources.c
+        textImg = "\n\t#if defined(PSP_MODE)\n"
+        for file in self.DataFiles:
+            print(file)
+            #open image and get size
+            #img = Image.open(file)
+            #width, height = img.size
+            width, height = GetTrueSizeImage(file)
+            print(width, height)
+            desti = "assets/" + file.replace(self.AssetFolderString.get(), "")
+            while desti.find("\\") != -1 or desti.find("//") != -1:
+                desti = desti.replace("\\","/")
+                desti = desti.replace("//","/")
+            textImg += '\tAddTexture((unsigned char*)"'+desti+'", '+str(width)+", "+str(height)+");\n"
+        textImg += "\t#endif\n"
+        self.ReplaceVarsInFile("src/ParticuleEngine/Resources.c", "RSC_LOAD", textImg)
 
 class WinDistribution(Distribution):
     def __init__(self, MainFrame, name):
@@ -527,9 +571,12 @@ class NdsDistribution(Distribution):
         #add virtual files in Resources.c
         textImg = "\n\t#if defined(NDS_MODE)\n"
         for file,ID in uuids.items():
+            print(file)
             #open image and get size
-            img = Image.open(file)
-            width, height = img.size
+            #img = Image.open(file)
+            #width, height = img.size
+            width, height = GetTrueSizeImage(file)
+            print(width, height)
             desti = "assets/" + file.replace(self.AssetFolderString.get(), "")
             while desti.find("\\") != -1 or desti.find("//") != -1:
                 desti = desti.replace("\\","/")

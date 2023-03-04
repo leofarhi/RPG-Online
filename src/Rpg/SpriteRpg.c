@@ -1,6 +1,6 @@
 #include "SpriteRpg.h"
 
-int* Subsurface(int x, int y, int w, int h) {
+int* SubsurfaceRpg(int x, int y, int w, int h) {
 	int* sub = malloc(sizeof(int) * 2);
 	sub[0] = x;
 	sub[1] = y;
@@ -46,14 +46,14 @@ void DrawSprite(SpriteRpg * sprite, int idTexture, int x, int y){
     PC_DrawSubTextureSize(sprite->Tilesheet, x+TILE_SIZE/2, y+TILE_SIZE/2, sub[6], sub[7], (INIT_TILE_SIZE/2), (INIT_TILE_SIZE/2), TILE_SIZE/2, TILE_SIZE/2);
 }
 
-SpriteRpg * FloorType(PC_Texture* Tilesheet, int* Coords) {
+SpriteRpg * FloorTypeRpg(PC_Texture* Tilesheet, int* Coords) {
 	int** Parts = malloc(sizeof(int*) * 6);
 	int count = 0;
 	for (int x = 0; x < INIT_TILE_SIZE * 2; x += INIT_TILE_SIZE)
 	{
 		for (int y = 0; y < INIT_TILE_SIZE * 3; y += INIT_TILE_SIZE)
 		{
-			Parts[count] = Subsurface(x, y, INIT_TILE_SIZE, INIT_TILE_SIZE);
+			Parts[count] = SubsurfaceRpg(x, y, INIT_TILE_SIZE, INIT_TILE_SIZE);
 			(Parts[count])[0] += Coords[0];
 			(Parts[count])[1] += Coords[1];
 			count++;
@@ -70,14 +70,14 @@ SpriteRpg * FloorType(PC_Texture* Tilesheet, int* Coords) {
 	return sp;
 };
 
-SpriteRpg * WallType(PC_Texture* Tilesheet, int* Coords) {
+SpriteRpg * WallTypeRpg(PC_Texture* Tilesheet, int* Coords) {
 	int** Parts = malloc(sizeof(int*) * 6);
 	int count = 0;
 	for (int x = 0; x < INIT_TILE_SIZE * 2; x += INIT_TILE_SIZE)
 	{
 		for (int y = 0; y < INIT_TILE_SIZE * 2; y += INIT_TILE_SIZE)
 		{
-			Parts[count] = Subsurface(x, y, INIT_TILE_SIZE, INIT_TILE_SIZE);
+			Parts[count] = SubsurfaceRpg(x, y, INIT_TILE_SIZE, INIT_TILE_SIZE);
 			(Parts[count])[0] += Coords[0];
 			(Parts[count])[1] += Coords[1];
 			count++;
@@ -94,52 +94,6 @@ SpriteRpg * WallType(PC_Texture* Tilesheet, int* Coords) {
 	free(Coords);
 	return sp;
 };
-
-void ExampleDraw(){
-	ClearScreen();
-    UpdateInputs();
-	PC_Texture *texture = PC_LoadTexture("assets/Images/Tiles/Outside_A1.png");
-    if (texture == NULL) {
-        printf("Error loading texture\n");
-        return;
-    }
-	//DrawSubTexture(texture, 500, 500, INIT_TILE_SIZE*4, 0, INIT_TILE_SIZE, INIT_TILE_SIZE);
-	SpriteRpg* sp = FloorType(texture, Subsurface( 0, 0, INIT_TILE_SIZE * 2, INIT_TILE_SIZE * 3));
-	int count = 0;
-	for (int y = 0; y < 6; y++)
-	{
-		for (int x = 0; x < 8; x++)
-		{
-			DrawSprite(sp, count, x * TILE_SIZE, y * TILE_SIZE);
-			count++;
-		}
-	}
-
-	texture = PC_LoadTexture("assets/Images/Tiles/Outside_A3.png");
-    if (texture == NULL) {
-        printf("Error loading texture\n");
-        return;
-    }
-	sp = WallType(texture, Subsurface( INIT_TILE_SIZE * 2, INIT_TILE_SIZE * 2, INIT_TILE_SIZE * 2, INIT_TILE_SIZE * 2));
-	count = 0;
-	for (int y = 0; y < 4; y++)
-	{
-		for (int x = 0; x < 4; x++)
-		{
-			DrawSprite(sp, count, x * TILE_SIZE, (y+9) * TILE_SIZE);
-			count++;
-		}
-	}
-	UpdateScreen();
-	while (1)
-	{
-		UpdateInputs();
-        #if defined(CG_MODE) || defined(FX_MODE)
-        if (IsKeyPressed(KEY_MENU))
-            break;
-        #endif
-	}
-}
 
 void FreeSprite(SpriteRpg* sprite)
 {

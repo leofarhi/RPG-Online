@@ -13,7 +13,9 @@ typedef struct VirtualFile
 
 void* GetResource(unsigned char* path);
 
-#if defined(NDS_MODE)
+#if defined(PSP_MODE)
+void AddTexture(unsigned char* path,int width, int height);
+#elif defined(NDS_MODE)
 void AddTexture(unsigned char* path, const unsigned int* Bitmap, const unsigned short* Pal, int width, int height);
 #elif defined(CG_MODE) || defined(FX_MODE)
 void AddTexture(unsigned char* path, bopti_image_t* texture);
@@ -25,11 +27,12 @@ void LoadResources();
 void UnloadResources();
 
 //*<RSC>*/
-	#if defined(NDS_MODE)
-#include "IMG_ASSET_280fc51b24f349439e1a8a0ca6ea6705.h"
-#include "IMG_ASSET_5fd89ba580e4445ba5093b76e22bbb39.h"
-#include "IMG_ASSET_adaa796b9954457bae7eb05f04d6294e.h"
-	#endif//*</RSC>*/
+	#if defined(CG_MODE) || defined(FX_MODE)
+extern bopti_image_t IMG_ASSET_31f19d6da9c14d6884b855a701bba98d;
+extern bopti_image_t IMG_ASSET_fd901d5d3398442093419ce154bbaac2;
+extern bopti_image_t IMG_ASSET_c09fd6cfec0342278086147966074e47;
+	#endif
+//*</RSC>*/
 
 
 #endif

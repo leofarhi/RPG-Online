@@ -26,6 +26,7 @@ struct VertexTexture
 };
 #elif defined(NDS_MODE)
 #elif defined(CG_MODE) || defined(FX_MODE)
+#include <gint/image.h>
 #endif
 
 #include <List.h>
@@ -39,6 +40,8 @@ typedef struct PC_Texture
     #elif defined(PSP_MODE)
     Texture* texture;
     int vram;
+    int width;
+    int height;
     #elif defined(NDS_MODE)
     int width;
     int height;

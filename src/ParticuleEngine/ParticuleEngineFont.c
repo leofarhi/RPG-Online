@@ -73,6 +73,30 @@ void PC_DrawText(const unsigned char *text, int x, int y, PC_Color color, PC_Fon
     #elif defined(CG_MODE) || defined(FX_MODE)
     if (font != NULL)
         dfont(font->font);
-    dtext(x, y, color.Hexa, (const char*)text);
+    dtext(x, y, color.color, (const char*)text);
+    #endif
+}
+
+Vector2 PC_GetTextSize(const unsigned char *text, PC_Font* font)
+{
+    #if defined(WIN_MODE)
+    if (font == NULL)
+        return (Vector2){0,0};
+    SDL_Color sdlColor = {255, 255, 255, 255};
+    SDL_Surface* textSurface = TTF_RenderText_Blended(font->font, text, sdlColor);
+    Vector2 size = {textSurface->w, textSurface->h};
+    SDL_FreeSurface(textSurface);
+    return size;
+    #elif defined(PSP_MODE) || defined(NDS_MODE)
+    if (font == NULL)
+        return (Vector2){0,0};
+    int t = fmax(font->h, font->w);
+    int scale = font->size / t;
+    int len = strlen(text);
+    return (Vector2){len * font->w * scale, font->h * scale};
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    if (font == NULL)
+        return (Vector2){0,0};
+    return (Vector2){0,0};
     #endif
 }

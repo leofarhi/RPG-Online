@@ -1127,14 +1127,13 @@ void glSubSprite(int x, int y, int subX, int subY, int subW, int subH, const glI
 
 	glBegin(GL_QUADS);
 
-	gxTexcoord2i(u1, v1); gxVertex2i(x1, y1);
+	gxTexcoord2i(u1, v1); gxVertex3i(x1, y1, g_depth);
 	gxTexcoord2i(u1, v2); gxVertex2i(x1, y2);
 	gxTexcoord2i(u2, v2); gxVertex2i(x2, y2);
 	gxTexcoord2i(u2, v1); gxVertex2i(x2, y1);
 
-	g_depth++;
-
 	glEnd();
+	g_depth++;
 
 }
 
@@ -1159,14 +1158,13 @@ void glSubSpriteScale(int x, int y, int subX, int subY, int subW, int subH,int s
 
 	glBegin(GL_QUADS);
 
-	gxTexcoord2i(u1, v1); gxVertex2i(x1, y1);
+	gxTexcoord2i(u1, v1); gxVertex3i(x1, y1, g_depth);
 	gxTexcoord2i(u1, v2); gxVertex2i(x1, y2);
 	gxTexcoord2i(u2, v2); gxVertex2i(x2, y2);
 	gxTexcoord2i(u2, v1); gxVertex2i(x2, y1);
 
-	g_depth++;
-
 	glEnd();
+	g_depth++;
 
 }
 

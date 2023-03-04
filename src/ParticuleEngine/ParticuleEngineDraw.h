@@ -38,6 +38,7 @@ extern int PaletteID;			// the all-white pal
 #include <stdlib.h>
 
 #define rgb(r, g, b) ((r & 0xf8) << 8) | ((g & 0xfc) << 3) | ((b & 0xf8) >> 3);
+void ToRGB(int Hexa, int *R, int *G, int *B);
 #endif
 
 typedef struct PC_Color
@@ -53,7 +54,7 @@ typedef struct PC_Color
     #elif defined(NDS_MODE)
     int _rgb15;
     #elif defined(CG_MODE) || defined(FX_MODE)
-    int Hexa;
+    int color;
     #endif
 } PC_Color;
 

@@ -66,6 +66,7 @@ int GetGlTextureSize(int size) {
 	}
 };
 #elif defined(CG_MODE) || defined(FX_MODE)
+#include <gint/image.h>
 #endif
 
 PC_Texture* PC_LoadTexture(const char* path)
@@ -89,6 +90,14 @@ PC_Texture* PC_LoadTexture(const char* path)
     PC_Texture* pc_texture = malloc(sizeof(PC_Texture));
     pc_texture->texture = texture;
     pc_texture->vram = GU_TRUE;
+    pc_texture->width = texture->width;
+    pc_texture->height = texture->height;
+    Vector2* size = (Vector2*)GetResource((unsigned char*)path);
+    if (size!= NULL)
+    {
+        pc_texture->width = size->x;
+        pc_texture->height = size->y;
+    }
     return pc_texture;
     #elif defined(NDS_MODE)
     PC_Texture* texture = (PC_Texture*)GetResource((unsigned char*)path);
@@ -229,6 +238,11 @@ void PC_DrawSubTexture(PC_Texture* texture, int x, int y, int sx, int sy, int sw
 
 void PC_DrawSubTextureSize(PC_Texture* texture, int x, int y, int sx, int sy, int sw, int sh, int w, int h)
 {
+    if (sw == w && sh == h)
+    {
+        PC_DrawSubTexture(texture, x, y, sx, sy, sw, sh);
+        return;
+    }
     #if defined(WIN_MODE)
     SDL_Rect rect = {x, y, w, h};
     SDL_Rect rect2 = {sx, sy, sw, sh};
@@ -268,7 +282,22 @@ void PC_DrawSubTextureSize(PC_Texture* texture, int x, int y, int sx, int sy, in
     glAssignColorTable(0, texture->TextureID);
     glSubSpriteScale(x, y, sx, sy, sw, sh,w,h, texture->imageData);
     #elif defined(CG_MODE) || defined(FX_MODE)
-    dsubimage(x, y,texture->texture, sx, sy, sw, sh, DIMAGE_NONE);
+    for (int row = 0; row < h; row ++)
+    {
+        for (int col = 0; col < w; col++)
+        {
+            int x2 = x + col;
+            int y2 = y + row;
+            int sx2 = sx + (col * sw) / w;
+            int sy2 = sy + (row * sh) / h;
+
+            int pixel = image_get_pixel(texture->texture, sx2, sy2);
+            if(pixel != image_alpha(texture->texture->format)) {
+                int color = image_decode_pixel(texture->texture, pixel);
+                dpixel(x2,y2, color);
+            }
+        }
+    }
     #endif
 }
 
@@ -328,7 +357,26 @@ void PC_DrawSubTextureSizeColored(PC_Texture* texture, int x, int y, int sx, int
     glAssignColorTable(0, texture->TextureID);
     glSubSpriteScale(x, y, sx, sy, sw, sh,w,h, texture->imageData);
     #elif defined(CG_MODE) || defined(FX_MODE)
-    dsubimage(x, y,texture->texture, sx, sy, sw, sh, DIMAGE_NONE);
+    for (int row = 0; row < h; row ++)
+    {
+        for (int col = 0; col < w; col++)
+        {
+            int x2 = x + col;
+            int y2 = y + row;
+            int sx2 = sx + (col * sw) / w;
+            int sy2 = sy + (row * sh) / h;
+
+            int pixel = image_get_pixel(texture->texture, sx2, sy2);
+            if(pixel != image_alpha(texture->texture->format)) {
+                int colPix = image_decode_pixel(texture->texture, pixel);
+                //multiply color
+                int R, G, B;
+                ToRGB(colPix, &R, &G, &B);
+                PC_Color colorRes =PC_ColorCreate(R * color.r / 255, G * color.g / 255, B * color.b / 255, 255);
+                dpixel(x2,y2, colorRes.color);
+            }
+        }
+    }
     #endif
 }
 
@@ -336,7 +384,8 @@ int GetWidth(PC_Texture* texture){
     #if defined(WIN_MODE)
     return texture->width;
     #elif defined(PSP_MODE)
-    return texture->texture->width;
+    return texture->width;
+    //return texture->texture->width;
     #elif defined(NDS_MODE)
     return texture->width;
     #elif defined(CG_MODE) || defined(FX_MODE)
@@ -347,7 +396,8 @@ int GetHeight(PC_Texture* texture){
     #if defined(WIN_MODE)
     return texture->height;
     #elif defined(PSP_MODE)
-    return texture->texture->height;
+    return texture->height;
+    //return texture->texture->height;
     #elif defined(NDS_MODE)
     return texture->height;
     #elif defined(CG_MODE) || defined(FX_MODE)

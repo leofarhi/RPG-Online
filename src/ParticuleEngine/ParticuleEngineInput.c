@@ -6,6 +6,7 @@
 List* InputEvents = NULL;
 List* InputEventsHeld = NULL;
 #elif defined(PSP_MODE)
+#include "Libs/PSP/MyKeyboard/MyKeyboard.h"
 float InputAnalogX() {
     float v = (float)padData.Lx / 255.0f;
     v -= 0.5f;
@@ -22,14 +23,22 @@ float InputAnalogY() {
     return v;
 }
 #elif defined(NDS_MODE)
-#elif defined(CG_MODE)
-#elif defined(FX_MODE)
+#include <nds.h>
+#include <stdio.h>
+#elif defined(CG_MODE) || defined(FX_MODE)
+#include <gint/keyboard.h>
+#include <MyKeyboard.h>
+#include <stdarg.h>
+#include <gint/rtc.h>
+List* InputEvents = NULL;
 #endif
+
+Vector2 MousePosition = {0,0};
 
 void UpdateInputs()
 {
     #if defined(WIN_MODE)
-    while (InputEvents->size > 0)
+        while (InputEvents->size > 0)
         {
             SDL_Event* event = List_pop(InputEvents);
             if (event->type == SDL_QUIT || (event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_ESCAPE))
@@ -46,7 +55,7 @@ void UpdateInputs()
             SDL_Event* eventCopy = malloc(sizeof(SDL_Event));
             memcpy(eventCopy, &event, sizeof(SDL_Event));
             List_add(InputEvents, eventCopy);
-            if (event.type == SDL_KEYDOWN){
+            if (event.type == SDL_KEYDOWN || event.type == SDL_MOUSEBUTTONDOWN){
                 SDL_Event* eventCopy2 = malloc(sizeof(SDL_Event));
                 memcpy(eventCopy2, &event, sizeof(SDL_Event));
                 List_add(InputEventsHeld, eventCopy2);
@@ -61,6 +70,21 @@ void UpdateInputs()
                     }
                 }
             }
+            if (event.type == SDL_MOUSEBUTTONUP){
+                for (List_node*cur=NULL; ForEach(InputEventsHeld,&cur);)
+                {
+                    SDL_Event* eventHeld = (SDL_Event*)(cur->data);
+                    if (eventHeld->button.button == event.button.button){
+                        List_remove(InputEventsHeld, eventHeld);
+                        free(eventHeld);
+                    }
+                }
+            }
+            if (event.type == SDL_MOUSEMOTION)
+            {
+                MousePosition.x = event.motion.x;
+                MousePosition.y = event.motion.y;
+            }
         }
     #elif defined(PSP_MODE)
     oldData = padData;
@@ -68,11 +92,23 @@ void UpdateInputs()
     #elif defined(NDS_MODE)
     scanKeys();
     #elif defined(CG_MODE) || defined(FX_MODE)
-    clearevents();
+    //clearevents();
+    while (InputEvents->size > 0)
+    {
+        free(List_pop(InputEvents));
+    }
+    key_event_t ev;
+    while((ev = pollevent()).type != KEYEV_NONE)
+    {
+        PC_GINT_keyinfo *key = malloc(sizeof(PC_GINT_keyinfo));
+        key->type = ev.type;
+        key->key = ev.key;
+        List_add(InputEvents, key);
+    }
     #endif
 }
 
-int IsKeyPressed(int key)
+bool IsKeyPressed(int key)
 {
     #if defined(WIN_MODE)
     for (List_node*cur=NULL; ForEach(InputEventsHeld,&cur);)
@@ -80,9 +116,9 @@ int IsKeyPressed(int key)
         SDL_Event* event = (SDL_Event*)(cur->data);
         if (event->type == SDL_KEYDOWN && event->key.keysym.sym == key)
         {
-            return 1;
+            return true;
         }
-        return 0;
+        return false;
     }
     #elif defined(PSP_MODE)
     bool current = (padData.Buttons & key) == key;
@@ -94,10 +130,10 @@ int IsKeyPressed(int key)
     return keydown(key);
     #endif
 
-    return 0;
+    return false;
 }
 
-int IsKeyDown(int key)
+bool IsKeyDown(int key)
 {
     #if defined(WIN_MODE)
 	for (List_node*cur=NULL; ForEach(InputEvents,&cur);)
@@ -105,9 +141,9 @@ int IsKeyDown(int key)
 		SDL_Event* event = (SDL_Event*)(cur->data);
         if (event->type == SDL_KEYDOWN && event->key.keysym.sym == key)
         {
-            return 1;
+            return true;
         }
-        return 0;
+        return false;
 	}
     #elif defined(PSP_MODE)
     bool current = (padData.Buttons & key) == key;
@@ -116,13 +152,21 @@ int IsKeyDown(int key)
     #elif defined(NDS_MODE)
     return keysDown() & ((KEYPAD_BITS)key);
     #elif defined(CG_MODE) || defined(FX_MODE)
-    return keydown(key);
+    for (List_node*cur=NULL; ForEach(InputEvents,&cur);)
+    {
+        PC_GINT_keyinfo* event = (PC_GINT_keyinfo*)(cur->data);
+        if (event->type == KEYEV_DOWN && event->key == key)
+        {
+            return true;
+        }
+        return false;
+    }
     #endif
 
-    return 0;
+    return false;
 }
 
-int IsKeyDownWait(int key)
+bool IsKeyDownWait(int key)
 {
     if (IsKeyDown(key))
     {
@@ -130,11 +174,12 @@ int IsKeyDownWait(int key)
         {
             UpdateInputs();
         }
-        return 1;
+        return true;
     }
+    return false;
 }
 
-int IsKeyUp(int key)
+bool IsKeyUp(int key)
 {
     #if defined(WIN_MODE)
     for (List_node*cur=NULL; ForEach(InputEvents,&cur);)
@@ -142,9 +187,9 @@ int IsKeyUp(int key)
         SDL_Event* event = (SDL_Event*)(cur->data);
         if (event->type == SDL_KEYUP && event->key.keysym.sym == key)
         {
-            return 1;
+            return true;
         }
-        return 0;
+        return false;
     }
     #elif defined(PSP_MODE)
     bool current = (padData.Buttons & key) == key;
@@ -153,27 +198,40 @@ int IsKeyUp(int key)
     #elif defined(NDS_MODE)
     return keysUp() & ((KEYPAD_BITS)key);
     #elif defined(CG_MODE) || defined(FX_MODE)
-    //TODO: Implement
+    for (List_node*cur=NULL; ForEach(InputEvents,&cur);)
+    {
+        PC_GINT_keyinfo* event = (PC_GINT_keyinfo*)(cur->data);
+        if (event->type == KEYEV_UP && event->key == key)
+        {
+            return true;
+        }
+        return false;
+    }
     #endif
 
-    return 0;
+    return false;
 }
 
-int IsMouseButtonPressed(int button)
+bool IsMouseButtonPressed(int button)
 {
     #if defined(WIN_MODE)
-    //TODO: Implement
-    #elif defined(PSP_MODE)
-    
-    #elif defined(NDS_MODE)
-    #elif defined(CG_MODE) || defined(FX_MODE)
-    //TODO: Implement
+    for (List_node*cur=NULL; ForEach(InputEventsHeld,&cur);)
+    {
+        SDL_Event* event = (SDL_Event*)(cur->data);
+        if (event->type == SDL_MOUSEBUTTONDOWN && event->button.button == button)
+        {
+            return true;
+        }
+        return false;
+    }
+    #elif defined(PSP_MODE) || defined(NDS_MODE) || defined(CG_MODE) || defined(FX_MODE)
+    return IsKeyPressed(button);
     #endif
 
-    return 0;
+    return false;
 }
 
-int IsMouseButtonDown(int button)
+bool IsMouseButtonDown(int button)
 {
     #if defined(WIN_MODE)
     for (List_node*cur=NULL; ForEach(InputEvents,&cur);)
@@ -181,20 +239,18 @@ int IsMouseButtonDown(int button)
         SDL_Event* event = (SDL_Event*)(cur->data);
         if (event->type == SDL_MOUSEBUTTONDOWN && event->button.button == button)
         {
-            return 1;
+            return true;
         }
-        return 0;
+        return false;
     }
-    #elif defined(PSP_MODE)
-    #elif defined(NDS_MODE)
-    #elif defined(CG_MODE) || defined(FX_MODE)
-    //TODO: Implement
+    #elif defined(PSP_MODE) || defined(NDS_MODE) || defined(CG_MODE) || defined(FX_MODE)
+    return IsKeyDown(button);
     #endif
 
-    return 0;
+    return false;
 }
 
-int IsMouseButtonUp(int button)
+bool IsMouseButtonUp(int button)
 {
     #if defined(WIN_MODE)
     for (List_node*cur=NULL; ForEach(InputEvents,&cur);)
@@ -202,15 +258,48 @@ int IsMouseButtonUp(int button)
         SDL_Event* event = (SDL_Event*)(cur->data);
         if (event->type == SDL_MOUSEBUTTONUP && event->button.button == button)
         {
-            return 1;
+            return true;
         }
-        return 0;
+        return false;
     }
-    #elif defined(PSP_MODE)
-    #elif defined(NDS_MODE)
-    #elif defined(CG_MODE) || defined(FX_MODE)
-    //TODO: Implement
+    #elif defined(PSP_MODE) || defined(NDS_MODE) || defined(CG_MODE) || defined(FX_MODE)
+    return IsKeyUp(button);
     #endif
 
-    return 0;
+    return false;
+}
+
+bool PC_MouseOver(int x, int y, int w, int h)
+{
+    return MousePosition.x >= x && MousePosition.x <= x+w && MousePosition.y >= y && MousePosition.y <= y+h;
+}
+
+char* PC_GetText() //don't forget to free the returned string
+{
+    #if defined(WIN_MODE)
+    for (List_node*cur=NULL; ForEach(InputEvents,&cur);)
+    {
+        SDL_Event* event = (SDL_Event*)(cur->data);
+        if (event->type == SDL_TEXTINPUT)
+        {
+            if (event->text.text==NULL || strlen(event->text.text)==0)
+                return NULL;
+            char* text = (char*)malloc(sizeof(char)*strlen(event->text.text)+1);
+            strcpy(text, event->text.text);
+            return text;
+        }
+    }
+    #elif defined(PSP_MODE)
+    //C:\pspsdk\psp\sdk\samples\utility\osk
+    return scanf_keyboard(PSP_list,"please enter some text","");
+    #elif defined(NDS_MODE)
+    //C:\devkitPro\examples\nds\input\keyboard\keyboard_stdin
+    char* text = (char*)malloc(sizeof(char)*256);
+    scanf("%s", text);
+    return text;
+    //A terminer
+    #elif defined(CG_MODE) || defined(FX_MODE)
+    return scanf_keyboard();
+    #endif
+    return NULL;
 }

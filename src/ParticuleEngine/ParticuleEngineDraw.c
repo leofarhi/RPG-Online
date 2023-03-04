@@ -36,6 +36,12 @@ int PaletteID;
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
+void ToRGB(int Hexa, int *R, int *G, int *B) {
+        *R = (((Hexa >> 11) & 0b11111) << 3);
+        *G = (((Hexa >> 5) & 0b111111) << 2);
+        *B = ((Hexa & 0b11111) << 3);
+    };
 #endif
 
 PC_Color PC_ColorCreate(short r, short g, short b, short a)
@@ -51,13 +57,13 @@ PC_Color PC_ColorCreate(short r, short g, short b, short a)
     #elif defined(NDS_MODE)
     color._rgb15 = RGB15(r, g, b);
     #elif defined(CG_MODE)
-    color.Hexa = rgb(r, g, b);
+    color.color = rgb(r, g, b);
     #elif defined(FX_MODE)
     int gray = (r + g + b) / 3;
     if (gray > 255/2)
-        color.Hexa = C_WHITE;
+        color.color = C_WHITE;
     else
-        color.Hexa = C_BLACK;
+        color.color = C_BLACK;
     #endif
     return color;
 }
@@ -83,7 +89,7 @@ void PC_DrawPoint(int x, int y, PC_Color color)
     #elif defined(NDS_MODE)
     glBoxFilled(x, y, x + 1, y + 1, color._rgb15);
     #elif defined(CG_MODE) || defined(FX_MODE)
-    dpixel(x, y, color.Hexa);
+    dpixel(x, y, color.color);
     #endif
 }
 
@@ -108,7 +114,7 @@ void PC_DrawLine(int x1, int y1, int x2, int y2, PC_Color color)
     #elif defined(NDS_MODE)
     glLine(x1, y1, x2, y2, color._rgb15);
     #elif defined(CG_MODE) || defined(FX_MODE)
-    dline(x1, y1, x2, y2, color.Hexa);
+    dline(x1, y1, x2, y2, color.color);
     #endif
 }
 
@@ -149,10 +155,10 @@ void PC_DrawRect(int x, int y, int w, int h, PC_Color color)
     glLine(x, y + h, x, y, color._rgb15);
     glLine(x, y + h, x + w, y + h, color._rgb15);
     #elif defined(CG_MODE) || defined(FX_MODE)
-    dline(x, y, x + w, y, color.Hexa);
-    dline(x + w, y, x + w, y + h, color.Hexa);
-    dline(x, y + h, x, y, color.Hexa);
-    dline(x, y + h, x + w, y + h, color.Hexa);
+    dline(x, y, x + w, y, color.color);
+    dline(x + w, y, x + w, y + h, color.color);
+    dline(x, y + h, x, y, color.color);
+    dline(x, y + h, x + w, y + h, color.color);
     #endif
 }
 
@@ -178,6 +184,6 @@ void PC_DrawFillRect(int x, int y, int w, int h, PC_Color color)
     #elif defined(NDS_MODE)
     glBoxFilled(x, y, x + w, y + h, color._rgb15);
     #elif defined(CG_MODE) || defined(FX_MODE)
-    drect(x, y, x + w, y + h, color.Hexa);
+    drect(x, y, x + w, y + h, color.color);
     #endif
 }

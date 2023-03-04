@@ -4,21 +4,32 @@
 #include "ParticuleEngineTexture.h"
 #include <List.h>
 
-#if defined(PSP_MODE)
 //*<PROJECT_NAME>*/
 #define PROJECT_NAME "Engine"
 //*</PROJECT_NAME>*/
+
+#if defined(PSP_MODE)
 PSP_MODULE_INFO(PROJECT_NAME, 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 #endif
 
 List* AllResources = NULL;
 
+void ToLower(char** str)
+{
+    for (int i = 0; i < strlen(*str); i++)
+    {
+        (*str)[i] = tolower((*str)[i]);
+    }
+}
+
 void* GetResource(unsigned char* path)
 {
     for (List_node*cur=NULL; ForEach(AllResources,&cur);)
     {
         VirtualFile* file = (VirtualFile*)(cur->data);
+        //ToLower(&file->path);
+        //ToLower(&path);
         if (strcmp(file->path, path) == 0)
         {
             return file->data;
@@ -27,7 +38,15 @@ void* GetResource(unsigned char* path)
     return NULL;
 }
 
-#if defined(NDS_MODE)
+#if defined(PSP_MODE)
+void AddTexture(unsigned char* path,int width, int height){
+    VirtualFile* file = malloc(sizeof(VirtualFile));
+    file->path = malloc(strlen(path) + 1);
+    strcpy(file->path, path);
+    file->data = vector2_create_ptr(width, height);
+    List_add(AllResources, file);
+}
+#elif defined(NDS_MODE)
 void AddTexture(unsigned char* path, const unsigned int* Bitmap, const unsigned short* Pal, int width, int height)
 {
     VirtualFile* file = malloc(sizeof(VirtualFile));
@@ -67,14 +86,15 @@ void AddFont(unsigned char* path, font_t* font)
 #endif
 
 void LoadResources(){
-    #if defined(NDS_MODE) || defined(CG_MODE) || defined(FX_MODE)
+    #if defined(NDS_MODE) || defined(CG_MODE) || defined(FX_MODE) || defined(PSP_MODE)
     AllResources = List_new();
     #endif
 //*<RSC_LOAD>*/
-	#if defined(NDS_MODE)
-	AddTexture((unsigned char*)"assets/Fonts/Font.png", IMG_ASSET_280fc51b24f349439e1a8a0ca6ea6705Bitmap,IMG_ASSET_280fc51b24f349439e1a8a0ca6ea6705Pal,128,128);
-	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_A1.png", IMG_ASSET_5fd89ba580e4445ba5093b76e22bbb39Bitmap,IMG_ASSET_5fd89ba580e4445ba5093b76e22bbb39Pal,256,256);
-	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_A3.png", IMG_ASSET_adaa796b9954457bae7eb05f04d6294eBitmap,IMG_ASSET_adaa796b9954457bae7eb05f04d6294ePal,256,128);
+	#if defined(PSP_MODE)
+	AddTexture((unsigned char*)"assets/Fonts/Font.png", 128, 128);
+	AddTexture((unsigned char*)"assets/Images/test.png", 256, 256);
+	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_A1.png", 256, 192);
+	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_A3.png", 256, 128);
 	#endif
 //*</RSC_LOAD>*/
 }

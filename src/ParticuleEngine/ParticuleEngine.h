@@ -38,13 +38,17 @@ void errx(int exitcode, const char *format, const char * error);
 #include <pspgu.h>
 #include <pspgum.h>
 
+#include <pspkernel.h>
+#include <pspdebug.h>
+#include <psputility.h>
+
 // Define PSP Width / Height
 #define PSP_BUF_WIDTH (512)
 #define PSP_SCR_WIDTH (480)
 #define PSP_SCR_HEIGHT (272)
 
 
-static unsigned int __attribute__((aligned(16))) list[262144];
+static unsigned int __attribute__((aligned(16))) PSP_list[262144];
 
 #define SCREEN_WIDTH PSP_SCR_WIDTH // 480
 #define SCREEN_HEIGHT PSP_SCR_HEIGHT // 272
@@ -78,6 +82,10 @@ extern int slcScreen;
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <libprof.h>
+extern prof_t FPS;
+#define SCREEN_WIDTH 396
+#define SCREEN_HEIGHT 224
 #elif defined(FX_MODE)
 #include <gint/display.h>
 #include <gint/keyboard.h>
@@ -89,17 +97,42 @@ extern int slcScreen;
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <libprof.h>
+extern prof_t FPS;
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
 #else
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 #endif
 
 //if not c++ compiler
-#if !defined(__cplusplus) && !defined(bool)
+#if !defined(__cplusplus)
+#if !defined(bool)
 typedef int bool;
+#endif
+#if !defined(true)
 #define true 1
 #define false 0
 #endif
+#endif
+
+typedef struct Vector2{ //vecteur 2D
+    int x;
+    int y;
+}Vector2;
+
+typedef struct Vector3{ //vecteur 3D
+    int x;
+    int y;
+    int z;
+}Vector3;
+
+Vector2 vector2_create(int x, int y);
+Vector2* vector2_create_ptr(int x, int y);
+
+Vector3 vector3_create(int x, int y, int z);
+Vector3* vector3_create_ptr(int x, int y, int z);
 
 void PC_Init();
 //Initializes the engine
@@ -114,5 +147,9 @@ void UpdateScreen();
 //Updates the screen
 
 void SelectScreen(int screen);
+//Selects the screen to draw on
+
+int GetFPS();
+//Returns the current FPS
 
 #endif

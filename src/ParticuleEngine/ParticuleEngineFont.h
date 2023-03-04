@@ -53,4 +53,6 @@ void PC_DrawText(const unsigned char *text, int x, int y, PC_Color color, PC_Fon
 
 void SetMainFont(PC_Font* font);
 
+Vector2 PC_GetTextSize(const unsigned char *text, PC_Font* font); //tres couteux
+
 #endif
