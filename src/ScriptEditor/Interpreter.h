@@ -21,10 +21,17 @@ enum ScriptToken{
     TOKEN_SC_CALL,
 
     MAX_TOKEN_SC
-}
+};
 
-typedef struct CodeLine CodeLine;
+
 typedef struct ScriptManager ScriptManager;
+
+typedef struct CodeLine{ // c'est une ligne de code dans un script
+    List_node *node;// c'est le noeud de la liste de lignes de code qui contient cette ligne
+    enum ScriptToken token;// c'est le token de la ligne de code
+    short indent;// c'est l'indentation de la ligne de code
+    List *parameters;// c'est la liste des parametres de la ligne de code
+}CodeLine;
 
 typedef struct InterpreterToken{
     char *name;
@@ -35,13 +42,6 @@ typedef struct InterpreterToken{
 extern InterpreterToken interpreterTokens[MAX_TOKEN_SC];
 
 void Interpreter_init();
-
-typedef struct CodeLine{ // c'est une ligne de code dans un script
-    List_node *node;// c'est le noeud de la liste de lignes de code qui contient cette ligne
-    enum ScriptToken token;// c'est le token de la ligne de code
-    short indent;// c'est l'indentation de la ligne de code
-    List *parameters;// c'est la liste des parametres de la ligne de code
-}CodeLine;
 
 typedef struct Script{ // c'est un script contenant des lignes de code
     char *name;// c'est le nom du script

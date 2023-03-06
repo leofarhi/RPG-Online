@@ -67,7 +67,7 @@ void Interpreter_init()
         "var",
         "call"
     };
-    int (*functions[MAX_TOKEN_SC])(CodeLine *line, List *parameters) = {
+    int (*functions[MAX_TOKEN_SC])(ScriptManager* scriptManager, CodeLine *line, List *parameters) = {
         Interpreter_if,
         Interpreter_else,
         Interpreter_while,
@@ -156,7 +156,7 @@ void Script_removeLine(Script *script, CodeLine *line)
 }
 void Script_addLineAt(Script *script, CodeLine *line, int index)
 {
-    List_insertAt(script->lines, line, index);
+    List_insertAt(script->lines, index, line);
 }
 
 CodeLine *CodeLine_new(enum ScriptToken token, short indent)
