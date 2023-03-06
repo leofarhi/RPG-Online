@@ -26,6 +26,7 @@ void List_print(List *l,char *format);
 int List_indexOf(List *l, void *data);
 void** List_toArray(List *l);
 void* List_pop(List *l);
+void* List_popFront(List *l);
 
 int ForEach(List *l, List_node **next);
 

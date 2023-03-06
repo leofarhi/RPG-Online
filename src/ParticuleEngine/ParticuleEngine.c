@@ -275,15 +275,15 @@ void SelectScreen(int screen)
     #endif
 }
 
-int GetFPS()
+int GetTicks()
 {
     #if defined(WIN_MODE)
-        return 0;
+        return SDL_GetTicks();
     #elif defined(PSP_MODE)
-        return 0;
+        return sceKernelGetSystemTimeLow();
     #elif defined(NDS_MODE)
-        return 0;
+        return 0; //Not implemented
     #elif defined(CG_MODE) || defined(FX_MODE)
-        return 0;
+        return 0; //Not implemented
     #endif
 }

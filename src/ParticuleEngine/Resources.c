@@ -94,7 +94,12 @@ void LoadResources(){
 	AddTexture((unsigned char*)"assets/Fonts/Font.png", 128, 128);
 	AddTexture((unsigned char*)"assets/Images/test.png", 256, 256);
 	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_A1.png", 256, 192);
+	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_A2.png", 256, 192);
 	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_A3.png", 256, 128);
+	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_A4.png", 256, 240);
+	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_A5.png", 128, 256);
+	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_B.png", 256, 256);
+	AddTexture((unsigned char*)"assets/Images/Tiles/Outside_C.png", 256, 256);
 	#endif
 //*</RSC_LOAD>*/
 }

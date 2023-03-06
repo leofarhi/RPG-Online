@@ -149,7 +149,6 @@ void UpdateScreen();
 void SelectScreen(int screen);
 //Selects the screen to draw on
 
-int GetFPS();
-//Returns the current FPS
+int GetTicks();
 
 #endif

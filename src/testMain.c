@@ -83,7 +83,7 @@ void ExampleDrawRpg(){
         return;
     }
 	//DrawSubTexture(texture, 500, 500, INIT_TILE_SIZE*4, 0, INIT_TILE_SIZE, INIT_TILE_SIZE);
-	SpriteRpg* sp = FloorTypeRpg(texture, SubsurfaceRpg( 0, 0, INIT_TILE_SIZE * 2, INIT_TILE_SIZE * 3));
+	SpriteRpg* sp = FloorTypeRpg(texture, SubsurfaceRpg( 0, 0));
 	int count = 0;
 	for (int y = 0; y < 6; y++)
 	{
@@ -99,7 +99,7 @@ void ExampleDrawRpg(){
         printf("Error loading texture\n");
         return;
     }
-	sp = WallTypeRpg(texture, SubsurfaceRpg( INIT_TILE_SIZE * 2, INIT_TILE_SIZE * 2, INIT_TILE_SIZE * 2, INIT_TILE_SIZE * 2));
+	sp = WallTypeRpg(texture, SubsurfaceRpg( INIT_TILE_SIZE * 2, INIT_TILE_SIZE * 2));
 	count = 0;
 	for (int y = 0; y < 4; y++)
 	{

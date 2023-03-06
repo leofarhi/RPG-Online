@@ -198,6 +198,24 @@ void* List_pop(List *l)
     return data;
 }
 
+void* List_popFront(List *l)
+{
+    void *data = l->head->data;
+    List_node *node = l->head;
+    if (node->next != NULL) {
+        node->next->prev = node->prev;
+    }
+    if (node == l->head) {
+        l->head = node->next;
+    }
+    if (node == l->tail) {
+        l->tail = node->prev;
+    }
+    free(node);
+    l->size--;
+    return data;
+}
+
 int ForEach(List *l, List_node **next)
 {
     if(*next == NULL)

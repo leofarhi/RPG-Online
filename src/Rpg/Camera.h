@@ -1,13 +1,13 @@
 #ifndef CAMERA_H
 #define CAMERA_H
+#include "../ParticuleEngine/ParticuleEngine.h"
 
 typedef struct Camera{
-	int x; //pixel coordinates (not tile coordinates)
-	int y; //pixel coordinates (not tile coordinates)
+	Vector2 Position; //pixel coordinates (not tile coordinates)
 } Camera;
 
-Camera* new_camera();
-void free_camera(Camera* cam);
+Camera* new_Camera();
+void free_Camera(Camera* cam);
 
 
 #endif

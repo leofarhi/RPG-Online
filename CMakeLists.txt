@@ -34,6 +34,10 @@ set(SOURCES
     src/Rpg/Camera.h
     src/Rpg/Chunk.c
     src/Rpg/Chunk.h
+    src/Rpg/RpgMain.c
+    src/Rpg/RpgMain.h
+    src/Rpg/RpgResources.c
+    src/Rpg/RpgResources.h
     src/Rpg/SpriteRpg.c
     src/Rpg/SpriteRpg.h
     src/Rpg/World.c
@@ -57,7 +61,12 @@ set(ASSETS_cg
   #/*<IMG_CG>*/
 assets/assets-cg/Images/test.png
 assets/assets-cg/Images/Tiles/Outside_A1.png
+assets/assets-cg/Images/Tiles/Outside_A2.png
 assets/assets-cg/Images/Tiles/Outside_A3.png
+assets/assets-cg/Images/Tiles/Outside_A4.png
+assets/assets-cg/Images/Tiles/Outside_A5.png
+assets/assets-cg/Images/Tiles/Outside_B.png
+assets/assets-cg/Images/Tiles/Outside_C.png
 #/*</IMG_CG>*/
   # ...
 )

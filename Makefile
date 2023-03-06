@@ -12,7 +12,7 @@ TITLE = Engine
 
 TARGET = $(OUTPUT)/$(TITLE)
 
-ListDir = Libs/List src/ParticuleEngine src/Rpg src/InterfaceSystem
+ListDir = Libs/List src/ParticuleEngine src/Rpg src/InterfaceSystem src/ScriptEditor
 #print all folder in ListDir
 #$(info $(ListDir))
 

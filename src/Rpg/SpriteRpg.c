@@ -1,11 +1,9 @@
 #include "SpriteRpg.h"
 
-int* SubsurfaceRpg(int x, int y, int w, int h) {
+int* SubsurfaceRpg(int x, int y) {
 	int* sub = malloc(sizeof(int) * 2);
 	sub[0] = x;
 	sub[1] = y;
-	//sub[2] = w;
-	//sub[3] = h;
 	return sub;
 };
 
@@ -14,6 +12,7 @@ SpriteRpg* MakeSprite(PC_Texture* Tilesheet,int** Parts, int length, int* TypeID
 	sp->Tilesheet = Tilesheet;
 	sp->subsurfaceCoords = malloc(sizeof(int*) * length);
 	sp->length = length;
+	sp->name = "None";
 	for (int i = 0; i < length; i++)
 	{
 		int* i1=Parts[TypeID[(i * 4) + 0]];
@@ -39,11 +38,18 @@ SpriteRpg* MakeSprite(PC_Texture* Tilesheet,int** Parts, int length, int* TypeID
 
 void DrawSprite(SpriteRpg * sprite, int idTexture, int x, int y){
 	int* sub = sprite->subsurfaceCoords[idTexture];
-	//printf("%d %d %d %d\n", sub[0], sub[1], sub[2], sub[3]);
-    PC_DrawSubTextureSize(sprite->Tilesheet, x, y, sub[0], sub[1], (INIT_TILE_SIZE/2), (INIT_TILE_SIZE/2), TILE_SIZE/2, TILE_SIZE/2);
-    PC_DrawSubTextureSize(sprite->Tilesheet, x+TILE_SIZE/2, y, sub[2], sub[3], (INIT_TILE_SIZE/2), (INIT_TILE_SIZE/2), TILE_SIZE/2, TILE_SIZE/2);
-    PC_DrawSubTextureSize(sprite->Tilesheet, x, y+TILE_SIZE/2, sub[4], sub[5], (INIT_TILE_SIZE/2), (INIT_TILE_SIZE/2), TILE_SIZE/2, TILE_SIZE/2);
-    PC_DrawSubTextureSize(sprite->Tilesheet, x+TILE_SIZE/2, y+TILE_SIZE/2, sub[6], sub[7], (INIT_TILE_SIZE/2), (INIT_TILE_SIZE/2), TILE_SIZE/2, TILE_SIZE/2);
+	
+	if (sprite->type == FULL_SPRITE)
+	{
+		PC_DrawSubTextureSize(sprite->Tilesheet, x, y, sub[0], sub[1], INIT_TILE_SIZE, INIT_TILE_SIZE, TILE_SIZE, TILE_SIZE);
+	}
+	else
+	{
+    	PC_DrawSubTextureSize(sprite->Tilesheet, x, y, sub[0], sub[1], (INIT_TILE_SIZE/2), (INIT_TILE_SIZE/2), TILE_SIZE/2, TILE_SIZE/2);
+    	PC_DrawSubTextureSize(sprite->Tilesheet, x+TILE_SIZE/2, y, sub[2], sub[3], (INIT_TILE_SIZE/2), (INIT_TILE_SIZE/2), TILE_SIZE/2, TILE_SIZE/2);
+    	PC_DrawSubTextureSize(sprite->Tilesheet, x, y+TILE_SIZE/2, sub[4], sub[5], (INIT_TILE_SIZE/2), (INIT_TILE_SIZE/2), TILE_SIZE/2, TILE_SIZE/2);
+    	PC_DrawSubTextureSize(sprite->Tilesheet, x+TILE_SIZE/2, y+TILE_SIZE/2, sub[6], sub[7], (INIT_TILE_SIZE/2), (INIT_TILE_SIZE/2), TILE_SIZE/2, TILE_SIZE/2);
+	}
 }
 
 SpriteRpg * FloorTypeRpg(PC_Texture* Tilesheet, int* Coords) {
@@ -53,7 +59,7 @@ SpriteRpg * FloorTypeRpg(PC_Texture* Tilesheet, int* Coords) {
 	{
 		for (int y = 0; y < INIT_TILE_SIZE * 3; y += INIT_TILE_SIZE)
 		{
-			Parts[count] = SubsurfaceRpg(x, y, INIT_TILE_SIZE, INIT_TILE_SIZE);
+			Parts[count] = SubsurfaceRpg(x, y);
 			(Parts[count])[0] += Coords[0];
 			(Parts[count])[1] += Coords[1];
 			count++;
@@ -77,7 +83,7 @@ SpriteRpg * WallTypeRpg(PC_Texture* Tilesheet, int* Coords) {
 	{
 		for (int y = 0; y < INIT_TILE_SIZE * 2; y += INIT_TILE_SIZE)
 		{
-			Parts[count] = SubsurfaceRpg(x, y, INIT_TILE_SIZE, INIT_TILE_SIZE);
+			Parts[count] = SubsurfaceRpg(x, y);
 			(Parts[count])[0] += Coords[0];
 			(Parts[count])[1] += Coords[1];
 			count++;
@@ -92,6 +98,25 @@ SpriteRpg * WallTypeRpg(PC_Texture* Tilesheet, int* Coords) {
 	}
 	free(Parts);
 	free(Coords);
+	return sp;
+};
+
+SpriteRpg * SpriteTypeRpg(PC_Texture* Tilesheet, int* Coords,int cols,int rows) {
+	SpriteRpg* sp = malloc(sizeof(SpriteRpg));
+	sp->Tilesheet = Tilesheet;
+	sp->subsurfaceCoords = malloc(sizeof(int*) * cols*rows);
+	sp->length = cols*rows;
+	sp->name = "None";
+	sp->type = FULL_SPRITE;
+	for (int i = 0; i < cols*rows; i++)
+	{
+		int* i1 = SubsurfaceRpg((i%cols)*INIT_TILE_SIZE, (i/cols)*INIT_TILE_SIZE);
+		sp->subsurfaceCoords[i] = malloc(sizeof(int) * 2);
+		int* temp = sp->subsurfaceCoords[i];
+		temp[0] = i1[0] + Coords[0];
+		temp[1] = i1[1] + Coords[1];
+		free(i1);
+	}
 	return sp;
 };
 

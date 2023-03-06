@@ -5,6 +5,8 @@
 #include "InterfaceSystem/EventDataSystem.h"
 
 #include "Rpg/World.h"
+#include "Rpg/RpgMain.h"
+#include "Rpg/RpgResources.h"
 
 #include "testMain.h"
 
@@ -14,7 +16,10 @@ int main(){//int argc, char *argv[]) {
     //////////////////////////////////////////
     //LoopTest();
     //ExampleDrawRpg();
-    ExampleDrawUI();
+    //ExampleDrawUI();
+    RpgInit();
+    RpgLoop();
+    RpgExit();
     //////////////////////////////////////////
     PC_Quit();
     return 0;
