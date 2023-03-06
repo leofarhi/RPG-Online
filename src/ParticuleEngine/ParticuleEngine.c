@@ -6,7 +6,7 @@
 #include "ParticuleEngineFont.h"
 #include "Resources.h"
 
-#if defined(WIN_MODE)
+#if defined(WIN_MODE) || defined(LINUX_MODE)
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -99,7 +99,7 @@ Vector3* vector3_create_ptr(int x, int y, int z)
 
 void PC_Init()
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE) || defined(LINUX_MODE)
         // Initializes the SDL.
         if (SDL_Init(SDL_INIT_VIDEO) != 0)
             errx(EXIT_FAILURE, "error Init %s", SDL_GetError());
@@ -198,7 +198,7 @@ void PC_Init()
 void PC_Quit()
 {
     UnloadResources();
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
         // Quits the font library.
         TTF_Quit();
 
@@ -226,7 +226,7 @@ void PC_Quit()
 
 void ClearScreen()
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
     #elif defined(PSP_MODE)
@@ -251,7 +251,7 @@ void ClearScreen()
 
 void UpdateScreen()
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
         SDL_RenderPresent(renderer);
     #elif defined(PSP_MODE)
         endFrame();
@@ -267,7 +267,7 @@ void UpdateScreen()
 
 void SelectScreen(int screen)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     #elif defined(PSP_MODE)
     #elif defined(NDS_MODE)
     #elif defined(CG_MODE)
@@ -277,7 +277,7 @@ void SelectScreen(int screen)
 
 int GetTicks()
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
         return SDL_GetTicks();
     #elif defined(PSP_MODE)
         return sceKernelGetSystemTimeLow();

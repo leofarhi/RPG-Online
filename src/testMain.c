@@ -12,7 +12,7 @@ void LoopTest(){
     int i = 0;
     PC_Texture* texture = PC_LoadTexture("assets/Images/test.png");
     PC_Font* font = NULL;
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE) || defined(LINUX_MODE)
     font = PC_LoadFont("assets/Fonts/Calibri.ttf", 20);
     #elif defined(PSP_MODE) || defined(NDS_MODE)
     font = PC_LoadFont("assets/Fonts/Font.png", 20, 8, 8, 16, 16);
@@ -33,7 +33,7 @@ void LoopTest(){
 
         if (texture!=NULL)
             PC_DrawFillRect(0+(int)i, 10, 50, 50, color);
-        #if defined(WIN_MODE)
+        #if defined(WIN_MODE) || defined(LINUX_MODE)
         if (IsKeyPressed(SDLK_RIGHT))
             i++;
         if (IsKeyPressed(SDLK_LEFT))
@@ -137,7 +137,7 @@ void ExampleDrawUI()
 {
     PC_Texture *texture = PC_LoadTexture("assets/Images/Tiles/Outside_A1.png");
     PC_Font* font = NULL;
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE) || defined(LINUX_MODE)
     font = PC_LoadFont("assets/Fonts/Calibri.ttf", 20);
     #elif defined(PSP_MODE) || defined(NDS_MODE)
     font = PC_LoadFont("assets/Fonts/Font.png", 10, 8, 8, 16, 16);
@@ -180,7 +180,7 @@ void ExampleDrawUI()
     interface_make_rect(p->ui,"r1",PC_ColorCreate(255,0,0,255));
     interface_transform(p->ui,"r1",(Vector2){410,450},(Vector2){100,100},(Vector2){0,0},(Vector2){0,0});
 
-    #ifndef WIN_MODE
+    #if !defined(WIN_MODE) && !defined(LINUX_MODE)
     //si c'est pas windows on change la disposition des elements
     interface_transform(ui,"b1",(Vector2){0,0},(Vector2){30,30},(Vector2){0,0},(Vector2){0,0});
     interface_transform(ui,"b2",(Vector2){40,0},(Vector2){30,30},(Vector2){0,0},(Vector2){0,0});

@@ -3,7 +3,7 @@
 #include "ParticuleEngine.h"
 #include "ParticuleEngineDraw.h"
 
-#if defined(WIN_MODE)
+#if defined(WIN_MODE)  || defined(LINUX_MODE)
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -33,7 +33,7 @@ struct VertexTexture
 
 typedef struct PC_Texture
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     SDL_Texture* texture;
     int width;
     int height;

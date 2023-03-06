@@ -7,7 +7,7 @@
 #include "../ParticuleEngine/ParticuleEngineInput.h"
 #include "../ParticuleEngine/Resources.h"
 
-#ifdef WIN_MODE
+#if defined(WIN_MODE)  || defined(LINUX_MODE)
 #define INIT_TILE_SIZE 48
 #define TILE_SIZE 48
 #elif defined(NDS_MODE)

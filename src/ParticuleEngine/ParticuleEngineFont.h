@@ -6,7 +6,7 @@
 #include <string.h>
 #include <math.h>
 
-#if defined(WIN_MODE)
+#if defined(WIN_MODE)  || defined(LINUX_MODE)
 #elif defined(PSP_MODE)
 #include <pspdisplay.h>
 #include <pspgu.h>
@@ -27,7 +27,7 @@
 
 typedef struct PC_Font
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     TTF_Font* font;
     #elif defined(PSP_MODE) || defined(NDS_MODE)
     PC_Texture* texture;

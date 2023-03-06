@@ -9,7 +9,7 @@
 #define CG_MODE
 #endif
 
-#if defined(WIN_MODE)
+#if defined(WIN_MODE)  || defined(LINUX_MODE)
 #define SDL_MAIN_HANDLED
 #include <stdio.h>
 #include <stdlib.h>

@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#if defined(WIN_MODE)
+#if defined(WIN_MODE)  || defined(LINUX_MODE)
 #elif defined(PSP_MODE)
 #include "Libs/PSP/common/common-sce.h"
 #include "Libs/PSP/common/callbacks.h"
@@ -71,7 +71,7 @@ int GetGlTextureSize(int size) {
 
 PC_Texture* PC_LoadTexture(const char* path)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     PC_Texture* texture = malloc(sizeof(PC_Texture));
     SDL_Surface* surface = IMG_Load(path);
     if (surface == NULL)
@@ -131,7 +131,7 @@ PC_Texture* PC_LoadTexture(const char* path)
 
 void PC_FreeTexture(PC_Texture* texture)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     SDL_DestroyTexture(texture->texture);
     free(texture);
     #elif defined(PSP_MODE)
@@ -149,7 +149,7 @@ void PC_FreeTexture(PC_Texture* texture)
 
 void PC_DrawTexture(PC_Texture* texture, int x, int y)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     SDL_Rect rect = {x, y, texture->width, texture->height};
     SDL_RenderCopy(renderer, texture->texture, NULL, &rect);
     #elif defined(PSP_MODE)
@@ -193,7 +193,7 @@ void PC_DrawTexture(PC_Texture* texture, int x, int y)
 
 void PC_DrawSubTexture(PC_Texture* texture, int x, int y, int sx, int sy, int sw, int sh)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     SDL_Rect rect = {x, y, sw, sh};
     SDL_Rect rect2 = {sx, sy, sw, sh};
     SDL_RenderCopy(renderer, texture->texture, &rect2, &rect);
@@ -243,7 +243,7 @@ void PC_DrawSubTextureSize(PC_Texture* texture, int x, int y, int sx, int sy, in
         PC_DrawSubTexture(texture, x, y, sx, sy, sw, sh);
         return;
     }
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     SDL_Rect rect = {x, y, w, h};
     SDL_Rect rect2 = {sx, sy, sw, sh};
     SDL_RenderCopy(renderer, texture->texture, &rect2, &rect);
@@ -303,7 +303,7 @@ void PC_DrawSubTextureSize(PC_Texture* texture, int x, int y, int sx, int sy, in
 
 void PC_DrawSubTextureSizeColored(PC_Texture* texture, int x, int y, int sx, int sy, int sw, int sh, int w, int h, PC_Color color)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     SDL_Rect rect = {x, y, w, h};
     SDL_Rect rect2 = {sx, sy, sw, sh};
     SDL_SetTextureColorMod(texture->texture, color.r, color.g, color.b);
@@ -381,7 +381,7 @@ void PC_DrawSubTextureSizeColored(PC_Texture* texture, int x, int y, int sx, int
 }
 
 int GetWidth(PC_Texture* texture){
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     return texture->width;
     #elif defined(PSP_MODE)
     return texture->width;
@@ -393,7 +393,7 @@ int GetWidth(PC_Texture* texture){
     #endif
 }
 int GetHeight(PC_Texture* texture){
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     return texture->height;
     #elif defined(PSP_MODE)
     return texture->height;

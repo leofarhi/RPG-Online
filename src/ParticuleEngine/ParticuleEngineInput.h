@@ -3,7 +3,7 @@
 #include "ParticuleEngine.h"
 #include <List.h>
 
-#if defined(WIN_MODE)
+#if defined(WIN_MODE)  || defined(LINUX_MODE)
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>

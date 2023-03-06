@@ -2,7 +2,7 @@
 #include "ParticuleEngine.h"
 #include <List.h>
 
-#if defined(WIN_MODE)
+#if defined(WIN_MODE)  || defined(LINUX_MODE)
 List* InputEvents = NULL;
 List* InputEventsHeld = NULL;
 #elif defined(PSP_MODE)
@@ -37,7 +37,7 @@ Vector2 MousePosition = {0,0};
 
 void UpdateInputs()
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
         while (InputEvents->size > 0)
         {
             SDL_Event* event = List_pop(InputEvents);
@@ -67,6 +67,7 @@ void UpdateInputs()
                     if (eventHeld->key.keysym.sym == event.key.keysym.sym){
                         List_remove(InputEventsHeld, eventHeld);
                         free(eventHeld);
+			cur=NULL;
                     }
                 }
             }
@@ -77,6 +78,7 @@ void UpdateInputs()
                     if (eventHeld->button.button == event.button.button){
                         List_remove(InputEventsHeld, eventHeld);
                         free(eventHeld);
+			cur=NULL;
                     }
                 }
             }
@@ -110,7 +112,7 @@ void UpdateInputs()
 
 bool IsKeyPressed(int key)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     for (List_node*cur=NULL; ForEach(InputEventsHeld,&cur);)
     {
         SDL_Event* event = (SDL_Event*)(cur->data);
@@ -135,7 +137,7 @@ bool IsKeyPressed(int key)
 
 bool IsKeyDown(int key)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
 	for (List_node*cur=NULL; ForEach(InputEvents,&cur);)
 	{
 		SDL_Event* event = (SDL_Event*)(cur->data);
@@ -181,7 +183,7 @@ bool IsKeyDownWait(int key)
 
 bool IsKeyUp(int key)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     for (List_node*cur=NULL; ForEach(InputEvents,&cur);)
     {
         SDL_Event* event = (SDL_Event*)(cur->data);
@@ -191,7 +193,7 @@ bool IsKeyUp(int key)
         }
         return false;
     }
-    #elif defined(PSP_MODE)
+    #elif defined(PSP_MODE)  || defined(LINUX_MODE)
     bool current = (padData.Buttons & key) == key;
     bool last = (oldData.Buttons & key) == key;
     return !current && last; // Currently not pressed, and pressed last time
@@ -214,7 +216,7 @@ bool IsKeyUp(int key)
 
 bool IsMouseButtonPressed(int button)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     for (List_node*cur=NULL; ForEach(InputEventsHeld,&cur);)
     {
         SDL_Event* event = (SDL_Event*)(cur->data);
@@ -233,7 +235,7 @@ bool IsMouseButtonPressed(int button)
 
 bool IsMouseButtonDown(int button)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     for (List_node*cur=NULL; ForEach(InputEvents,&cur);)
     {
         SDL_Event* event = (SDL_Event*)(cur->data);
@@ -252,7 +254,7 @@ bool IsMouseButtonDown(int button)
 
 bool IsMouseButtonUp(int button)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     for (List_node*cur=NULL; ForEach(InputEvents,&cur);)
     {
         SDL_Event* event = (SDL_Event*)(cur->data);
@@ -276,7 +278,7 @@ bool PC_MouseOver(int x, int y, int w, int h)
 
 char* PC_GetText() //don't forget to free the returned string
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     for (List_node*cur=NULL; ForEach(InputEvents,&cur);)
     {
         SDL_Event* event = (SDL_Event*)(cur->data);

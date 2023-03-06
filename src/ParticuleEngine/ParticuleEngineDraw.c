@@ -1,7 +1,7 @@
 #include "ParticuleEngineDraw.h"
 #include "ParticuleEngine.h"
 
-#if defined(WIN_MODE)
+#if defined(WIN_MODE)  || defined(LINUX_MODE)
 #elif defined(PSP_MODE)
 #include <stddef.h>
 #include <math.h>
@@ -51,7 +51,7 @@ PC_Color PC_ColorCreate(short r, short g, short b, short a)
     color.g = g;
     color.b = b;
     color.a = a;
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     #elif defined(PSP_MODE)
     color.color = (a << 24) | (b << 16) | (g << 8) | r;
     #elif defined(NDS_MODE)
@@ -70,7 +70,7 @@ PC_Color PC_ColorCreate(short r, short g, short b, short a)
 
 void PC_DrawPoint(int x, int y, PC_Color color)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderDrawPoint(renderer, x, y);
     #elif defined(PSP_MODE)
@@ -95,7 +95,7 @@ void PC_DrawPoint(int x, int y, PC_Color color)
 
 void PC_DrawLine(int x1, int y1, int x2, int y2, PC_Color color)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
     #elif defined(PSP_MODE)
@@ -120,7 +120,7 @@ void PC_DrawLine(int x1, int y1, int x2, int y2, PC_Color color)
 
 void PC_DrawRect(int x, int y, int w, int h, PC_Color color)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_Rect rect = {x, y, w, h};
     SDL_RenderDrawRect(renderer, &rect);
@@ -164,7 +164,7 @@ void PC_DrawRect(int x, int y, int w, int h, PC_Color color)
 
 void PC_DrawFillRect(int x, int y, int w, int h, PC_Color color)
 {
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_Rect rect = {x, y, w, h};
     SDL_RenderFillRect(renderer, &rect);

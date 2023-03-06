@@ -7,7 +7,7 @@ void initEventDataSystem(){
         return;
     eventDataSystem = malloc(sizeof(EventDataSystem));
     eventDataSystem->selectedUI = NULL;
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     eventDataSystem->useController = false;
 
     eventDataSystem->mouseLeftClick = SDL_BUTTON_LEFT;

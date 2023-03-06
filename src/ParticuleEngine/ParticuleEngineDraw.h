@@ -3,7 +3,7 @@
 
 #include "ParticuleEngine.h"
 
-#if defined(WIN_MODE)
+#if defined(WIN_MODE)  || defined(LINUX_MODE)
 #elif defined(PSP_MODE)
 
 // Vert Data
@@ -48,7 +48,7 @@ typedef struct PC_Color
     short b;
     short a;
 
-    #if defined(WIN_MODE)
+    #if defined(WIN_MODE)  || defined(LINUX_MODE)
     #elif defined(PSP_MODE)
     u32 color;
     #elif defined(NDS_MODE)
